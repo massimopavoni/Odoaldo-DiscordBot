@@ -2,8 +2,8 @@ import discord
 from discord.ext import commands
 import os
 
-client = commands.Bot(command_prefix=".")
-token = os.getenv("DISCORD_BOT_TOKEN")
+client = commands.Bot(command_prefix='.')
+token = os.getenv('DISCORD_BOT_TOKEN')
 
 
 @client.event
@@ -17,9 +17,14 @@ async def ping(ctx):
     await ctx.send(f"🏓 Pong with {str(round(client.latency, 2))}")
 
 
-@client.command(name="whoami")
+@client.command(name='whoami')
 async def whoami(ctx):
     await ctx.send(f"You are {ctx.message.author.name}")
+
+
+@client.command(name='mortadella')
+async def mortadella(ctx):
+    await ctx.send("**Deeply inhales**\n\n*Dove? Dimmelo.*")
 
 
 @client.command()

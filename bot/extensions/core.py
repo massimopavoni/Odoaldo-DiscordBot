@@ -5,7 +5,7 @@ from json import load as load_json
 class Core(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        with open('bot\\extensions\\core_config.json', 'r') as f:
+        with open('bot/extensions/core_config.json', 'r') as f:
             self.core_config = load_json(f)
 
     @commands.command(aliases=['odoaldo'])

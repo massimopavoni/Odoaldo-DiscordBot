@@ -1,4 +1,4 @@
 {
   "bot_description": "Hi! I'm Odoaldo, a particularly popular character, and I'm here because you had the permission to invite me in your server...you have it, right??\nAnyway, I can do a lotta cool thingies, so just explore me! Mlml...",
-  "startup_extensions": ["core", "test"]
+  "startup_extensions": ["core"]
 }

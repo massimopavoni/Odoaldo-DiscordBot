@@ -3,7 +3,7 @@ from discord.ext import commands
 from json import load as load_json
 from os import getenv as os_getenv
 
-with open('bot\\bot_config.json', 'r') as f:
+with open('bot/bot_config.json', 'r') as f:
     bot_config = load_json(f)
 
 bot = commands.Bot(command_prefix='.',

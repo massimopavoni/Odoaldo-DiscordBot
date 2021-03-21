@@ -1,4 +1,11 @@
 {
-  "bot_description": "Hi! I'm Odoaldo, a particularly popular character, and I'm here because you had the permission to invite me in your server...you have it, right??\nAnyway, I can do a lotta cool thingies, so just explore me! Mlml...",
-  "startup_extensions": ["core"]
+  "bot_description": "Ciao! Io sono Odoaldo, un personaggio particolarmente benvoluto, e sono qui perché ti è stato concesso il permesso di invitarmi nella tua gilda Discord...ti è stato dato, sì??\nComunque, posso fare un sacco di cose fighe, quindi semplicemente esplorami! Mlml...",
+  "startup_extensions": [
+    "core"
+  ],
+  "extensions": [
+    "core"
+  ],
+  "close_brief": "Close the bot connection, admins only",
+  "close_description": ""
 }

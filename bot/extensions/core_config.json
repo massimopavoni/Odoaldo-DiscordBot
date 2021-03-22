@@ -1,0 +1,11 @@
+{
+  "clear_brief": "Clear the last messages, admins only",
+  "clear_description": "",
+  "info": "> *\"Odoaldo, un personaggio particolarmente benvoluto, va in refettorio a mangiare un panino con la mortadella.\"*\n> \n> **21 Aprile 2018**",
+  "info_brief": "Show basic bot info",
+  "info_description": "",
+  "ping_brief": "Test latency",
+  "ping_description": "",
+  "whoami_brief": "Identify command author",
+  "whoami_description": ""
+}

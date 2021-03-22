@@ -1,11 +1,20 @@
 {
+  "name":"Odoaldo-DiscordBot",
+  "version": "1.0.0",
+  "url": "https://github.com/Damax00/Odoaldo-DiscordBot",
+  "license": "GNU General Public License v3.0",
+  "author": "Massimo Pavoni",
+  "author_email": "maspavoni@gmail.com",
+  "description": "Discord bot mod for personal guild",
   "bot_description": "Ciao! Io sono Odoaldo, un personaggio particolarmente benvoluto, e sono qui perché ti è stato concesso il permesso di invitarmi nella tua gilda Discord...ti è stato dato, sì??\nComunque, posso fare un sacco di cose fighe, quindi semplicemente esplorami! Mlml...",
   "startup_extensions": [
     "core"
   ],
   "extensions": [
-    "core"
+    "core",
+    "mortadella"
   ],
+  "close": "I'mma take a good nap :sleeping:\n\n`Odoaldo is going offline`",
   "close_brief": "Close the bot connection, admins only",
   "close_description": ""
 }

@@ -16,5 +16,5 @@
   ],
   "close": "I'mma take a good nap :sleeping:\n\n`Odoaldo is going offline`",
   "close_brief": "Close the bot connection, admins only",
-  "close_description": ""
+  "close_description": "Admins can use this command to shutdown the application.\nWarning: use only with extreme caution and make sure that the owner of the bot can fix the problems."
 }

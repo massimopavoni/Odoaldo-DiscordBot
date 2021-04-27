@@ -21,11 +21,11 @@ async def on_ready():
 
 @bot.command(aliases=['shutdown'],
              brief=bot_config['close_brief'],
-             description=bot_config['close_description']
-             if (bot_config['close_description'] != '') else bot_config['close_brief'])
+             description=bot_config['close_description'])
 @commands.has_permissions(administrator=True)
 async def close(ctx):
-    await ctx.send(bot_config['close'])
+    embed_msg = discord.Embed(description=bot_config['close'], color=0xe67e22)
+    await ctx.send(embed=embed_msg)
     await bot.change_presence(status=discord.Status.offline)
     await bot.close()
     print(">>> Odoaldo is offline\n\n\n")
@@ -34,7 +34,7 @@ async def close(ctx):
 if __name__ == "__main__":
     print(f"\n\n\n{'-' * 80}")
     print(f"{bot_config['name']} - Version {bot_config['version']} - {bot_config['url']}")
-    print(f"licensed under {bot_config['license']} by {bot_config['author']} <{bot_config['author_email']}>")
+    print(f"Licensed under {bot_config['license']} by {bot_config['author']} <{bot_config['author_email']}>")
     print(f"{'-' * 80}")
     print(f"\nAvailable extensions: {bot_config['extensions']}")
     print(f"Attempting to load startup extensions: {bot_config['startup_extensions']}")

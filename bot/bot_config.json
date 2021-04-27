@@ -7,14 +7,24 @@
   "author_email": "maspavoni@gmail.com",
   "description": "Discord bot mod for personal guild",
   "bot_description": "Ciao! Io sono Odoaldo, un personaggio particolarmente benvoluto, e sono qui perché ti è stato concesso il permesso di invitarmi nella tua gilda Discord...ti è stato dato, sì??\nComunque, posso fare un sacco di cose fighe, quindi semplicemente esplorami! Mlml...",
-  "startup_extensions": [
-    "core"
-  ],
   "extensions": [
     "core",
     "mortadella"
   ],
+  "startup_extensions": [
+    "core"
+  ],
+  "embeds_color": "0xe67e22",
+  "command_not_found": "Command not found.\n\nYou might want to check the list of commands with `.help`",
   "close": "I'mma take a good nap :sleeping:\n\n`Odoaldo is going offline`",
   "close_brief": "Close the bot connection, admins only",
-  "close_description": "Admins can use this command to shutdown the application.\nWarning: use only with extreme caution and make sure that the owner of the bot can fix the problems."
+  "close_description": "Admins can use this command to shutdown the application.\nWarning: use only with extreme caution and make sure that the owner of the bot can fix eventual problems.",
+  "get_extensions_brief": "Get info on the extensions, admins only",
+  "get_extensions_description": "Admins can use this command to get basic information on the status of the bot extensions.",
+  "load_extensions_brief": "Load a set of extensions, admins only",
+  "load_extensions_description": "Admins can use this command to load a specified list of the bot extensions.\nWarning: use only with caution, if the extensions work without problems.",
+  "unload_extensions_brief": "Unload a set of extensions, admins only",
+  "unload_extensions_description": "Admins can use this command to unload a specified list of the bot extensions.\nWarning: use only with extreme caution when extensions have critical failures and make sure that the owner of the bot can fix eventual problems.",
+  "reload_extensions_brief": "Reload a set of extensions, admins only",
+  "reload_extensions_description": "Admins can use this command to reload a specified list of the bot extensions.\nWarning: use only with extreme caution and make sure that the owner of the bot can fix eventual problems."
 }

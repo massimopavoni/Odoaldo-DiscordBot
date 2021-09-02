@@ -1,7 +1,8 @@
-import discord
-from discord.ext import commands
 from json import load as load_json
 from os import getenv as os_getenv
+
+import discord
+from discord.ext import commands
 
 with open('bot/bot_config.json', 'r', encoding='utf-8') as f:
     bot_config = load_json(f)
@@ -55,7 +56,6 @@ async def getExtensions(ctx):
         else:
             embed_msg.description += f"\n- :no_entry: {get_extension} is currently unloaded"
     await ctx.send(embed=embed_msg)
-
 
 
 @bot.command(aliases=['loadexts', 'lexts'],

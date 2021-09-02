@@ -12,7 +12,8 @@
     "mortadella"
   ],
   "startup_extensions": [
-    "core"
+    "core",
+    "mortadella"
   ],
   "embeds_color": "0xe67e22",
   "command_not_found": "Command not found.\n\nYou might want to check the list of commands with `.help`",

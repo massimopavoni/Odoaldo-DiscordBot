@@ -1,6 +1,7 @@
-import discord
-from discord.ext import commands
 from json import load as load_json
+
+from discord import Embed
+from discord.ext import commands
 
 with open('bot/bot_config.json', 'r', encoding='utf-8') as f:
     bot_config = load_json(f)
@@ -23,7 +24,7 @@ class Core(commands.Cog):
                       brief=core_config['info_brief'],
                       description=core_config['info_description'])
     async def info(self, ctx):
-        embed_msg = discord.Embed(title=bot_config['name'], color=self.embeds_color)
+        embed_msg = Embed(title=bot_config['name'], color=self.embeds_color)
         embed_msg.add_field(name='Version', value=f"`{bot_config['version']}`")
         embed_msg.add_field(name='Source', value=f"[GitHub repository]({bot_config['url']})", inline=True)
         embed_msg.add_field(name='\u200b', value='\u200b', inline=True)
@@ -37,7 +38,7 @@ class Core(commands.Cog):
                       brief=core_config['ping_brief'],
                       description=core_config['ping_description'])
     async def ping(self, ctx):
-        embed_msg = discord.Embed(
+        embed_msg = Embed(
             description=f":ping_pong: {'Polo' if ctx.message.content.lower() == '.marco' else 'Pong'}! "
                         f"with {str(round(self.bot.latency * 1000))}ms",
             color=self.embeds_color)
@@ -47,9 +48,13 @@ class Core(commands.Cog):
                       brief=core_config['whoami_brief'],
                       description=core_config['whoami_description'])
     async def whoami(self, ctx):
-        embed_msg = discord.Embed(description=f"You are {ctx.message.author.mention}", color=self.embeds_color)
+        embed_msg = Embed(description=f"You are {ctx.message.author.mention}", color=self.embeds_color)
         await ctx.send(embed=embed_msg)
 
 
 def setup(bot):
     bot.add_cog(Core(bot))
+
+
+def teardown(bot):
+    bot.remove_cog(Core(bot))

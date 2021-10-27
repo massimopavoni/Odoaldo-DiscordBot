@@ -1,5 +1,5 @@
-import random
 from json import load as load_json
+from random import choice
 
 from discord import Embed
 from discord.ext import commands
@@ -26,7 +26,7 @@ class Mortadella(commands.Cog):
                       brief=mortadella_config['badfoodjoke_brief'],
                       description=mortadella_config['badfoodjoke_description'])
     async def badfoodjoke(self, ctx):
-        embed_msg = Embed(description=random.choice(bad_food_jokes), color=self.embeds_color)
+        embed_msg = Embed(description=choice(bad_food_jokes), color=self.embeds_color)
         await ctx.send(embed=embed_msg)
 
 

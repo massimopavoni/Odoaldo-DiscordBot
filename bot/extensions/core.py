@@ -1,12 +1,12 @@
-from json import load as load_json
+from json import load as json_load
 
 from discord import Embed
 from discord.ext import commands
 
 with open('bot/bot_config.json', 'r', encoding='utf-8') as f:
-    bot_config = load_json(f)
+    bot_config = json_load(f)
 with open('bot/extensions/core_config.json', 'r', encoding='utf-8') as f:
-    core_config = load_json(f)
+    core_config = json_load(f)
 
 
 class Core(commands.Cog):

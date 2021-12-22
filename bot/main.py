@@ -1,11 +1,11 @@
-from json import load as load_json
+from json import load as json_load
 from os import getenv as os_getenv
 
 import discord
 from discord.ext import commands
 
 with open('bot/bot_config.json', 'r', encoding='utf-8') as f:
-    bot_config = load_json(f)
+    bot_config = json_load(f)
 
 bot = commands.Bot(command_prefix='.',
                    case_insensitive=True,
@@ -43,11 +43,11 @@ async def close(ctx):
     print(">>> Odoaldo is offline\n\n\n")
 
 
-@bot.command(aliases=['getexts', 'gexts', 'extensions', 'exts'],
+@bot.command(aliases=['getextensions', 'getexts', 'gexts', 'extensions', 'exts'],
              brief=bot_config['get_extensions_brief'],
              description=bot_config['get_extensions_description'])
 @commands.has_permissions(administrator=True)
-async def getExtensions(ctx):
+async def get_extensions(ctx):
     embed_msg = discord.Embed(color=embeds_color)
     embed_msg.description = "Extensions info:"
     for get_extension in bot_config['extensions']:
@@ -58,84 +58,84 @@ async def getExtensions(ctx):
     await ctx.send(embed=embed_msg)
 
 
-@bot.command(aliases=['loadexts', 'lexts'],
+@bot.command(aliases=['loadextensions', 'loadexts', 'lexts'],
              brief=bot_config['load_extensions_brief'],
              description=bot_config['load_extensions_description'])
 @commands.has_permissions(administrator=True)
-async def loadExtensions(ctx, *load_extensions):
+async def load_extensions(ctx, *extensions_list):
     embed_msg = discord.Embed(color=embeds_color)
-    if len(load_extensions) == 0:
+    if len(extensions_list) == 0:
         embed_msg.description = "No extensions provided."
     else:
         embed_msg.description = "Output:"
-        for load_extension in load_extensions:
-            if load_extension not in bot_config['extensions']:
-                embed_msg.description += f"\n- :interrobang: {load_extension} is not an extension"
+        for extension_item in extensions_list:
+            if extension_item not in bot_config['extensions']:
+                embed_msg.description += f"\n- :interrobang: {extension_item} is not an extension"
                 continue
-            if load_extension in (key.split('.')[1] for key in bot.extensions.keys()):
-                embed_msg.description += f"\n- :warning: {load_extension} is currently already loaded"
+            if extension_item in (key.split('.')[1] for key in bot.extensions.keys()):
+                embed_msg.description += f"\n- :warning: {extension_item} is currently already loaded"
                 continue
             try:
-                bot.load_extension('extensions.' + load_extension)
-                print(f">>> {load_extension} loaded")
-                embed_msg.description += f"\n- :white_check_mark: {load_extension} loaded"
-            except Exception as e:
-                print(f">>> Failed to load extension {load_extension} [{type(e).__name__}: {e}]")
-                embed_msg.description += f"\n- :no_entry: {load_extension} not loaded"
+                bot.load_extension('extensions.' + extension_item)
+                print(f">>> {extension_item} loaded")
+                embed_msg.description += f"\n- :white_check_mark: {extension_item} loaded"
+            except Exception as ex:
+                print(f">>> Failed to load extension {extension_item} [{type(ex).__name__}: {ex}]")
+                embed_msg.description += f"\n- :no_entry: {extension_item} not loaded"
     await ctx.send(embed=embed_msg)
 
 
-@bot.command(aliases=['unloadexts', 'ulexts'],
+@bot.command(aliases=['unloadextensions', 'unloadexts', 'ulexts'],
              brief=bot_config['unload_extensions_brief'],
              description=bot_config['unload_extensions_description'])
 @commands.has_permissions(administrator=True)
-async def unloadExtensions(ctx, *unload_extensions):
+async def unload_extensions(ctx, *extensions_list):
     embed_msg = discord.Embed(color=embeds_color)
-    if len(unload_extensions) == 0:
+    if len(extensions_list) == 0:
         embed_msg.description = "No extensions provided."
     else:
         embed_msg.description = "Output:"
-        for unload_extension in unload_extensions:
-            if unload_extension not in bot_config['extensions']:
-                embed_msg.description += f"\n- :interrobang: {unload_extension} is not an extension"
+        for extension_item in extensions_list:
+            if extension_item not in bot_config['extensions']:
+                embed_msg.description += f"\n- :interrobang: {extension_item} is not an extension"
                 continue
-            if unload_extension not in (key.split('.')[1] for key in bot.extensions.keys()):
-                embed_msg.description += f"\n- :warning: {unload_extension} is currently not loaded"
+            if extension_item not in (key.split('.')[1] for key in bot.extensions.keys()):
+                embed_msg.description += f"\n- :warning: {extension_item} is currently not loaded"
                 continue
             try:
-                bot.unload_extension('extensions.' + unload_extension)
-                print(f">>> {unload_extension} unloaded")
-                embed_msg.description += f"\n- :white_check_mark: {unload_extension} unloaded"
-            except Exception as e:
-                print(f">>> Failed to unload extension {unload_extension} [{type(e).__name__}: {e}]")
-                embed_msg.description += f"\n- :no_entry: {unload_extension} not unloaded"
+                bot.unload_extension('extensions.' + extension_item)
+                print(f">>> {extension_item} unloaded")
+                embed_msg.description += f"\n- :white_check_mark: {extension_item} unloaded"
+            except Exception as ex:
+                print(f">>> Failed to unload extension {extension_item} [{type(ex).__name__}: {ex}]")
+                embed_msg.description += f"\n- :no_entry: {extension_item} not unloaded"
     await ctx.send(embed=embed_msg)
 
 
-@bot.command(aliases=['reloadexts', 'rlexts'],
+@bot.command(aliases=['reloadextensions', 'reloadexts', 'rlexts'],
              brief=bot_config['reload_extensions_brief'],
              description=bot_config['reload_extensions_description'])
 @commands.has_permissions(administrator=True)
-async def reloadExtensions(ctx, *reload_extensions):
+async def reload_extensions(ctx, *extensions_list):
     embed_msg = discord.Embed(color=embeds_color)
-    if len(reload_extensions) == 0:
+    if len(extensions_list) == 0:
         embed_msg.description = "No extensions provided."
     else:
         embed_msg.description = "Output:"
-        for reload_extension in reload_extensions:
-            if reload_extension not in bot_config['extensions']:
-                embed_msg.description += f"\n- :interrobang: {reload_extension} is not an extension"
+        for extension_item in extensions_list:
+            if extension_item not in bot_config['extensions']:
+                embed_msg.description += f"\n- :interrobang: {extension_item} is not an extension"
                 continue
-            if reload_extension not in (key.split('.')[1] for key in bot.extensions.keys()):
-                embed_msg.description += f"\n- :warning: {reload_extension} is currently not loaded"
+            if extension_item not in (key.split('.')[1] for key in bot.extensions.keys()):
+                embed_msg.description += f"\n- :warning: {extension_item} is currently not loaded"
                 continue
             try:
-                bot.reload_extension('extensions.' + reload_extension)
-                print(f">>> {reload_extension} reloaded")
-                embed_msg.description += f"\n- :white_check_mark: {reload_extension} reloaded"
-            except Exception as e:
-                print(f">>> Failed to reload extension {reload_extension} [{type(e).__name__}: {e}]")
-                embed_msg.description += f"\n- :no_entry: {reload_extension} not reloaded"
+                bot.reload_extension('extensions.' + extension_item)
+                print(f">>> {extension_item} reloaded")
+                embed_msg.description += f"\n- :white_check_mark: {extension_item} reloaded"
+            except Exception as ex:
+                print(f">>> Failed to reload extension {extension_item} [{type(ex).__name__}: {ex}]")
+                embed_msg.description += f"\n- :no_entry: {extension_item} not reloaded"
     await ctx.send(embed=embed_msg)
 
 

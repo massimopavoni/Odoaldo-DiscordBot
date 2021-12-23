@@ -231,4 +231,4 @@ dmypy.json
 
 # Project excluded directories/files
 assets/
-venv_testing.bat
+venv_testing.sh

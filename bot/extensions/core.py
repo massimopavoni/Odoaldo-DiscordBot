@@ -31,7 +31,7 @@ class Core(commands.Cog):
         embed_msg.add_field(name='License', value=bot_config['license'])
         embed_msg.add_field(name='Author', value=bot_config['author'], inline=True)
         embed_msg.add_field(name='\u200b', value='\u200b', inline=True)
-        embed_msg.add_field(name='\u200b', value=core_config['info'], inline=False)
+        embed_msg.add_field(name='\u200b', value=core_config['info_message'], inline=False)
         await ctx.send(embed=embed_msg)
 
     @commands.command(aliases=['marco'],

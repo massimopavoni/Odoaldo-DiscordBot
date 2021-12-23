@@ -19,7 +19,7 @@ class Mortadella(commands.Cog):
                       brief=mortadella_config['mortadella_brief'],
                       description=mortadella_config['mortadella_description'])
     async def mortadella(self, ctx):
-        embed_msg = Embed(title=mortadella_config['mortadella'], color=self.embeds_color)
+        embed_msg = Embed(title=mortadella_config['mortadella_message'], color=self.embeds_color)
         await ctx.send(embed=embed_msg)
 
     @commands.command(aliases=['foodjoke', 'badjoke', 'joke'],

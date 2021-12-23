@@ -6,12 +6,10 @@ from discord.ext import commands
 
 with open('bot/bot_config.json', 'r', encoding='utf-8') as f:
     bot_config = json_load(f)
-
 bot = commands.Bot(command_prefix='.',
                    case_insensitive=True,
                    description=bot_config['bot_description'])
 token = os_getenv('DISCORD_BOT_TOKEN')
-
 embeds_color = int(bot_config['embeds_color'], 16)
 
 
@@ -25,7 +23,7 @@ async def on_ready():
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
-        embed_msg = discord.Embed(description=bot_config['command_not_found'], color=embeds_color)
+        embed_msg = discord.Embed(description=bot_config['command_not_found_message'], color=embeds_color)
         await ctx.send(embed=embed_msg)
         return
     raise error
@@ -36,7 +34,7 @@ async def on_command_error(ctx, error):
              description=bot_config['close_description'])
 @commands.has_permissions(administrator=True)
 async def close(ctx):
-    embed_msg = discord.Embed(description=bot_config['close'], color=embeds_color)
+    embed_msg = discord.Embed(description=bot_config['close_message'], color=embeds_color)
     await ctx.send(embed=embed_msg)
     await bot.change_presence(status=discord.Status.offline)
     await bot.close()
@@ -152,5 +150,4 @@ if __name__ == "__main__":
             print(extension + ' loaded')
         except Exception as e:
             print(f"Failed to load extension {extension} [{type(e).__name__}: {e}]")
-
     bot.run(token)

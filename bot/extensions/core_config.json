@@ -2,7 +2,7 @@
   "embeds_color": "0xe67e22",
   "clear_brief": "Clear the last messages, admins only",
   "clear_description": "Admins can use this command to clear the most recent messages inside a text channel (including the command).\nFirst argument specifies the number of messages, default is 3.",
-  "info": ">>> *\"Odoaldo, un personaggio particolarmente benvoluto, va in refettorio a mangiare un panino con la mortadella.\"*\n\n**21 Aprile 2018**",
+  "info_message": ">>> *\"Odoaldo, un personaggio particolarmente benvoluto, va in refettorio a mangiare un panino con la mortadella.\"*\n\n**21 Aprile 2018**",
   "info_brief": "Show basic bot info",
   "info_description": "Show some more detailed info on the bot, its version, author, repository url, license.",
   "ping_brief": "Test latency",

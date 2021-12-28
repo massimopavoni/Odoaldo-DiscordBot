@@ -2,13 +2,13 @@ from json import load as json_load
 from os import getenv as os_getenv
 
 import discord
-from discord.ext import commands
+from discord.ext import commands as discord_commands
 
 with open('bot/bot_config.json', 'r', encoding='utf-8') as f:
     bot_config = json_load(f)
-bot = commands.Bot(command_prefix='.',
-                   case_insensitive=True,
-                   description=bot_config['bot_description'])
+bot = discord_commands.Bot(command_prefix='.',
+                           case_insensitive=True,
+                           description=bot_config['bot_description'])
 token = os_getenv('DISCORD_BOT_TOKEN')
 embeds_color = int(bot_config['embeds_color'], 16)
 
@@ -22,17 +22,26 @@ async def on_ready():
 
 @bot.event
 async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandNotFound):
-        embed_msg = discord.Embed(description=bot_config['command_not_found_message'], color=embeds_color)
-        await ctx.send(embed=embed_msg)
-        return
-    raise error
+    match error:
+        case discord_commands.CommandNotFound():
+            embed_msg = discord.Embed(title="Command not found",
+                                      description=bot_config['command_not_found_description'], color=embeds_color)
+        case discord_commands.MissingRequiredArgument():
+            embed_msg = discord.Embed(title="Missing required argument",
+                                      description=bot_config['missing_required_argument_description'].format(
+                                          ctx.invoked_with.replace('.', '')) + f"\n\n```Error: {error}```",
+                                      color=embeds_color)
+        case _:
+            embed_msg = discord.Embed(title="An error occurred",
+                                      description=bot_config['generic_error_description'] + f"\n\n```Error: {error}```",
+                                      color=embeds_color)
+    await ctx.send(embed=embed_msg)
 
 
 @bot.command(aliases=['shutdown'],
              brief=bot_config['close_brief'],
              description=bot_config['close_description'])
-@commands.has_permissions(administrator=True)
+@discord_commands.has_permissions(administrator=True)
 async def close(ctx):
     embed_msg = discord.Embed(description=bot_config['close_message'], color=embeds_color)
     await ctx.send(embed=embed_msg)
@@ -44,10 +53,9 @@ async def close(ctx):
 @bot.command(aliases=['getextensions', 'getexts', 'gexts', 'extensions', 'exts'],
              brief=bot_config['get_extensions_brief'],
              description=bot_config['get_extensions_description'])
-@commands.has_permissions(administrator=True)
+@discord_commands.has_permissions(administrator=True)
 async def get_extensions(ctx):
-    embed_msg = discord.Embed(color=embeds_color)
-    embed_msg.description = "Extensions info:"
+    embed_msg = discord.Embed(description="Available extensions' info:", color=embeds_color)
     for get_extension in bot_config['extensions']:
         if get_extension in (key.split('.')[1] for key in bot.extensions.keys()):
             embed_msg.description += f"\n- :white_check_mark: {get_extension} is currently loaded"
@@ -59,7 +67,7 @@ async def get_extensions(ctx):
 @bot.command(aliases=['loadextensions', 'loadexts', 'lexts'],
              brief=bot_config['load_extensions_brief'],
              description=bot_config['load_extensions_description'])
-@commands.has_permissions(administrator=True)
+@discord_commands.has_permissions(administrator=True)
 async def load_extensions(ctx, *extensions_list):
     embed_msg = discord.Embed(color=embeds_color)
     if len(extensions_list) == 0:
@@ -86,7 +94,7 @@ async def load_extensions(ctx, *extensions_list):
 @bot.command(aliases=['unloadextensions', 'unloadexts', 'ulexts'],
              brief=bot_config['unload_extensions_brief'],
              description=bot_config['unload_extensions_description'])
-@commands.has_permissions(administrator=True)
+@discord_commands.has_permissions(administrator=True)
 async def unload_extensions(ctx, *extensions_list):
     embed_msg = discord.Embed(color=embeds_color)
     if len(extensions_list) == 0:
@@ -113,7 +121,7 @@ async def unload_extensions(ctx, *extensions_list):
 @bot.command(aliases=['reloadextensions', 'reloadexts', 'rlexts'],
              brief=bot_config['reload_extensions_brief'],
              description=bot_config['reload_extensions_description'])
-@commands.has_permissions(administrator=True)
+@discord_commands.has_permissions(administrator=True)
 async def reload_extensions(ctx, *extensions_list):
     embed_msg = discord.Embed(color=embeds_color)
     if len(extensions_list) == 0:

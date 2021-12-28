@@ -18,7 +18,9 @@
     "rng"
   ],
   "embeds_color": "0xe67e22",
-  "command_not_found_message": "Command not found.\n\nYou might want to check the list of commands with `.help`",
+  "command_not_found_description": "You might want to check the list of commands with `.help`",
+  "missing_required_argument_description": "You might want to check the syntax of the command with `.help {0}`",
+  "generic_error_description": "You might want to ask an administrator to check the bot logs.",
   "close_message": "I'mma take a good nap :sleeping:\n\n`Odoaldo is going offline`",
   "close_brief": "Close the bot connection, admins only",
   "close_description": "Admins can use this command to shutdown the application.\nWarning: use only with extreme caution and make sure that the owner of the bot can fix eventual problems.",

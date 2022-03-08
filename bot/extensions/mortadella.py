@@ -22,10 +22,10 @@ class Mortadella(discord_commands.Cog):
         embed_msg = DiscordEmbed(title=mortadella_config['mortadella_message'], color=self.embeds_color)
         await ctx.send(embed=embed_msg)
 
-    @discord_commands.command(aliases=['foodjoke', 'badjoke', 'joke'],
+    @discord_commands.command(aliases=['badfoodjoke', 'foodjoke', 'badjoke', 'joke'],
                               brief=mortadella_config['badfoodjoke_brief'],
                               description=mortadella_config['badfoodjoke_description'])
-    async def badfoodjoke(self, ctx):
+    async def bad_food_joke(self, ctx):
         embed_msg = DiscordEmbed(description=random_choice(bad_food_jokes), color=self.embeds_color)
         await ctx.send(embed=embed_msg)
 

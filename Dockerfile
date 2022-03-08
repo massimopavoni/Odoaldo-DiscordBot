@@ -1,0 +1,14 @@
+ARG BASE_IMAGE
+FROM $BASE_IMAGE
+
+WORKDIR Odoaldo-DiscordBot
+
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+
+COPY bot/ bot/
+
+ARG TOKEN
+ENV DISCORD_BOT_TOKEN=$TOKEN
+
+CMD [ "python", "bot/main.py" ] 

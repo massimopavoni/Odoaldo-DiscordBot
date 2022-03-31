@@ -71,9 +71,9 @@ async def get_extensions(ctx):
 async def load_extensions(ctx, *extensions_list):
     embed_msg = discord.Embed(color=embeds_color)
     if len(extensions_list) == 0:
-        embed_msg.description = "No extensions provided."
+        embed_msg.description = bot_config['no_extensions_provided_message']
     else:
-        embed_msg.description = "Output:"
+        embed_msg.description = bot_config['extensions_output_message_start']
         for extension_item in extensions_list:
             if extension_item not in bot_config['extensions']:
                 embed_msg.description += f"\n- :interrobang: {extension_item} is not an extension"
@@ -82,7 +82,7 @@ async def load_extensions(ctx, *extensions_list):
                 embed_msg.description += f"\n- :warning: {extension_item} is currently already loaded"
                 continue
             try:
-                bot.load_extension('extensions.' + extension_item)
+                bot.load_extension(bot_config['extensions_directory'] + extension_item)
                 print(f">>> {extension_item} loaded")
                 embed_msg.description += f"\n- :white_check_mark: {extension_item} loaded"
             except Exception as ex:
@@ -98,9 +98,9 @@ async def load_extensions(ctx, *extensions_list):
 async def unload_extensions(ctx, *extensions_list):
     embed_msg = discord.Embed(color=embeds_color)
     if len(extensions_list) == 0:
-        embed_msg.description = "No extensions provided."
+        embed_msg.description = bot_config['no_extensions_provided_message']
     else:
-        embed_msg.description = "Output:"
+        embed_msg.description = bot_config['extensions_output_message_start']
         for extension_item in extensions_list:
             if extension_item not in bot_config['extensions']:
                 embed_msg.description += f"\n- :interrobang: {extension_item} is not an extension"
@@ -109,7 +109,7 @@ async def unload_extensions(ctx, *extensions_list):
                 embed_msg.description += f"\n- :warning: {extension_item} is currently not loaded"
                 continue
             try:
-                bot.unload_extension('extensions.' + extension_item)
+                bot.unload_extension(bot_config['extensions_directory'] + extension_item)
                 print(f">>> {extension_item} unloaded")
                 embed_msg.description += f"\n- :white_check_mark: {extension_item} unloaded"
             except Exception as ex:
@@ -125,9 +125,9 @@ async def unload_extensions(ctx, *extensions_list):
 async def reload_extensions(ctx, *extensions_list):
     embed_msg = discord.Embed(color=embeds_color)
     if len(extensions_list) == 0:
-        embed_msg.description = "No extensions provided."
+        embed_msg.description = bot_config['no_extensions_provided_message']
     else:
-        embed_msg.description = "Output:"
+        embed_msg.description = bot_config['extensions_output_message_start']
         for extension_item in extensions_list:
             if extension_item not in bot_config['extensions']:
                 embed_msg.description += f"\n- :interrobang: {extension_item} is not an extension"
@@ -136,7 +136,7 @@ async def reload_extensions(ctx, *extensions_list):
                 embed_msg.description += f"\n- :warning: {extension_item} is currently not loaded"
                 continue
             try:
-                bot.reload_extension('extensions.' + extension_item)
+                bot.reload_extension(bot_config['extensions_directory'] + extension_item)
                 print(f">>> {extension_item} reloaded")
                 embed_msg.description += f"\n- :white_check_mark: {extension_item} reloaded"
             except Exception as ex:
@@ -154,7 +154,7 @@ if __name__ == "__main__":
     print(f"Attempting to load startup extensions: {bot_config['startup_extensions']}")
     for extension in bot_config['startup_extensions']:
         try:
-            bot.load_extension('extensions.' + extension)
+            bot.load_extension(bot_config['extensions_directory'] + extension)
             print(extension + ' loaded')
         except Exception as e:
             print(f"Failed to load extension {extension} [{type(e).__name__}: {e}]")

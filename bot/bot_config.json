@@ -17,6 +17,7 @@
     "mortadella",
     "rng"
   ],
+  "extensions_directory": "extensions.",
   "embeds_color": "0xe67e22",
   "command_not_found_description": "You might want to check the list of commands with `.help`",
   "missing_required_argument_description": "You might want to check the syntax of the command with `.help {0}`",
@@ -26,6 +27,8 @@
   "close_description": "Admins can use this command to shutdown the application.\nWarning: use only with extreme caution and make sure that the owner of the bot can fix eventual problems.",
   "get_extensions_brief": "Get info on the extensions, admins only",
   "get_extensions_description": "Admins can use this command to get basic information on the status of the bot extensions.",
+  "no_extensions_provided_message": "No extensions provided",
+  "extensions_output_message_start": "Output:",
   "load_extensions_brief": "Load a set of extensions, admins only",
   "load_extensions_description": "Admins can use this command to load a specified list of the bot extensions.\nWarning: use only with caution, if the extensions work without problems.",
   "unload_extensions_brief": "Unload a set of extensions, admins only",

@@ -2,12 +2,22 @@ FROM python:3.10-slim-buster
 
 WORKDIR Odoaldo-DiscordBot
 
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN python -m venv venv
 
+COPY requirements.txt requirements.txt
 COPY bot/ bot/
 
-ARG TOKEN
-ENV DISCORD_BOT_TOKEN=$TOKEN
+RUN . venv/bin/activate && pip install -r requirements.txt
 
-CMD [ "python", "bot/main.py" ] 
+ARG DISCORD_TOKEN \
+    MONGO_USER \
+    MONGO_PASSWORD \
+    MONGO_HOST \
+    MONGO_PORT
+ENV DISCORD_TOKEN=$DISCORD_TOKEN \
+    MONGO_USER=$MONGO_USER \
+    MONGO_PASSWORD=$MONGO_PASSWORD \
+    MONGO_HOST=$MONGO_HOST \
+    MONGO_PORT=$MONGO_PORT
+
+CMD . venv/bin/activate && exec python bot/main.py

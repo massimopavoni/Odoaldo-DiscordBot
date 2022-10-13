@@ -1,0 +1,12 @@
+{
+  "embeds_color": "0xe91e63",
+  "mortadella_message": "**Inhales deeply**\n\n*Dove? Dimmelo.*",
+  "mortadella_brief": "Mention the best food for Odoaldo",
+  "mortadella_description": "Wanna know how eager Odoaldo is to eat mortadella?",
+  "joke_empty_message": "Mi dispiace, non ho battute decenti... :pensive:",
+  "joke_brief": "Ask for a joke",
+  "joke_description": "Randomly select one from a pool of jokes.",
+  "add_joke_brief": "Add a new joke",
+  "add_joke_description": "Add a new joke to the pool in the database.",
+  "add_joke_joke": "to add"
+}

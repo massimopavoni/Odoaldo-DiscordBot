@@ -1,161 +1,224 @@
+from asyncio import run as asyncio_run
 from json import load as json_load
+from logging import basicConfig as logging_basicConfig, getLogger, INFO
 from os import getenv as os_getenv
+from os.path import join as path_join
+from urllib.parse import quote_plus
 
 import discord
 from discord.ext import commands as discord_commands
 
-with open('bot/bot_config.json', 'r', encoding='utf-8') as f:
-    bot_config = json_load(f)
+from src.utils.mongo import MongoUtil
+
+# Setting up basic config and root logger
+logging_basicConfig(format='[%(asctime)s] [%(name)-32s] [%(levelname)-8s] - %(message)s',
+                    datefmt="%Y-%m-%d %H:%M:%S", level=INFO)
+logger = getLogger()
+
+# Get bot level config and create discord bot object with intents, token and main bot embeds color
+with open(path_join('bot', 'bot_config.json'), 'r', encoding='utf-8') as f:
+    _bot_config = json_load(f)
+__intents = discord.Intents.default()
+__intents.message_content = True
 bot = discord_commands.Bot(command_prefix='.',
                            case_insensitive=True,
-                           description=bot_config['bot_description'])
-token = os_getenv('DISCORD_BOT_TOKEN')
-embeds_color = int(bot_config['embeds_color'], 16)
+                           description=_bot_config['bot_description'],
+                           intents=__intents)
+__token = os_getenv('DISCORD_TOKEN')
+__embeds_color = int(_bot_config['embeds_color'], 16)
 
 
 @bot.event
 async def on_ready():
+    # Show Odoaldo activity, suggesting help command
     await bot.change_presence(status=discord.Status.online,
                               activity=discord.Activity(type=discord.ActivityType.listening, name='.help'))
-    print("\n>>> Odoaldo is online")
+    logger.info("Odoaldo is online")
 
 
 @bot.event
-async def on_command_error(ctx, error):
+async def on_command_error(ctx: discord_commands.Context, error):
+    logger.error(error)
+    # Match type of error
     match error:
         case discord_commands.CommandNotFound():
+            # Command not found
             embed_msg = discord.Embed(title="Command not found",
-                                      description=bot_config['command_not_found_description'], color=embeds_color)
+                                      description=_bot_config['command_not_found_description'], color=__embeds_color)
         case discord_commands.MissingRequiredArgument():
+            # Command is missing required arguments
             embed_msg = discord.Embed(title="Missing required argument",
-                                      description=bot_config['missing_required_argument_description'].format(
-                                          ctx.invoked_with.replace('.', '')) + f"\n\n```Error: {error}```",
-                                      color=embeds_color)
+                                      description=f"""{_bot_config['missing_required_argument_description'].format(
+                                          ctx.invoked_with.replace('.', ''))}\n\n```Error: {error}```""",
+                                      color=__embeds_color)
+        case discord_commands.CommandInvokeError():
+            # Command invoked raised an exception
+            embed_msg = discord.Embed(title="Command invoke error",
+                                      description=f"{_bot_config['command_invoke_error_description']}"
+                                                  f"\n\n```Error: {error}```",
+                                      color=__embeds_color)
         case _:
+            # Generic error
             embed_msg = discord.Embed(title="An error occurred",
-                                      description=bot_config['generic_error_description'] + f"\n\n```Error: {error}```",
-                                      color=embeds_color)
+                                      description=f"{_bot_config['generic_error_description']}"
+                                                  f"\n\n```Error: {error}```",
+                                      color=__embeds_color)
+    # Send error message
     await ctx.send(embed=embed_msg)
 
 
-@bot.command(aliases=['shutdown'],
-             brief=bot_config['close_brief'],
-             description=bot_config['close_description'])
+@bot.command(aliases=['close', 'stop', 'die'],
+             brief=_bot_config['shutdown_brief'],
+             description=_bot_config['shutdown_description'])
 @discord_commands.has_permissions(administrator=True)
-async def close(ctx):
-    embed_msg = discord.Embed(description=bot_config['close_message'], color=embeds_color)
+async def shutdown(ctx: discord_commands.Context):
+    # Send offline message
+    embed_msg = discord.Embed(description=_bot_config['shutdown_message'], color=__embeds_color)
     await ctx.send(embed=embed_msg)
+    # Change Odoaldo presence to offline
     await bot.change_presence(status=discord.Status.offline)
+    logger.info("Odoaldo is offline")
+    # Shutdown bot
     await bot.close()
-    print(">>> Odoaldo is offline\n\n\n")
 
 
 @bot.command(aliases=['getextensions', 'getexts', 'gexts', 'extensions', 'exts'],
-             brief=bot_config['get_extensions_brief'],
-             description=bot_config['get_extensions_description'])
+             brief=_bot_config['get_extensions_brief'],
+             description=_bot_config['get_extensions_description'])
 @discord_commands.has_permissions(administrator=True)
-async def get_extensions(ctx):
-    embed_msg = discord.Embed(description="Available extensions' info:", color=embeds_color)
-    for get_extension in bot_config['extensions']:
-        if get_extension in (key.split('.')[1] for key in bot.extensions.keys()):
-            embed_msg.description += f"\n- :white_check_mark: {get_extension} is currently loaded"
+async def get_extensions(ctx: discord_commands.Context):
+    embed_msg = discord.Embed(description="Available extensions' info:", color=__embeds_color)
+    # Send message with available extensions' information
+    for extension in _bot_config['available_extensions']:
+        if extension in (key.split('.')[-1] for key in bot.extensions.keys()):
+            embed_msg.description += f"\n- :white_check_mark: {extension} is currently loaded"
         else:
-            embed_msg.description += f"\n- :no_entry: {get_extension} is currently unloaded"
+            embed_msg.description += f"\n- :no_entry: {extension} is currently unloaded"
     await ctx.send(embed=embed_msg)
 
 
 @bot.command(aliases=['loadextensions', 'loadexts', 'lexts'],
-             brief=bot_config['load_extensions_brief'],
-             description=bot_config['load_extensions_description'])
+             brief=_bot_config['load_extensions_brief'],
+             description=_bot_config['load_extensions_description'])
 @discord_commands.has_permissions(administrator=True)
-async def load_extensions(ctx, *extensions_list):
-    embed_msg = discord.Embed(color=embeds_color)
-    if len(extensions_list) == 0:
-        embed_msg.description = bot_config['no_extensions_provided_message']
-    else:
-        embed_msg.description = bot_config['extensions_output_message_start']
-        for extension_item in extensions_list:
-            if extension_item not in bot_config['extensions']:
-                embed_msg.description += f"\n- :interrobang: {extension_item} is not an extension"
-                continue
-            if extension_item in (key.split('.')[1] for key in bot.extensions.keys()):
-                embed_msg.description += f"\n- :warning: {extension_item} is currently already loaded"
-                continue
-            try:
-                bot.load_extension(bot_config['extensions_directory'] + extension_item)
-                print(f">>> {extension_item} loaded")
-                embed_msg.description += f"\n- :white_check_mark: {extension_item} loaded"
-            except Exception as ex:
-                print(f">>> Failed to load extension {extension_item} [{type(ex).__name__}: {ex}]")
-                embed_msg.description += f"\n- :no_entry: {extension_item} not loaded"
+async def load_extensions(ctx: discord_commands.Context,
+                          *, extensions: str = discord_commands.parameter(
+            description=_bot_config['extensions_list'])):
+    embed_msg = discord.Embed(color=__embeds_color)
+    embed_msg.description = _bot_config['extensions_output_message_start']
+    logger.info(f"Loading extensions {extensions}")
+    # Send message with requested extensions to load information
+    for extension in extensions:
+        # Check for inconsistencies with available extensions
+        if extension not in _bot_config['available_extensions']:
+            embed_msg.description += f"\n- :interrobang: {extension} is not an extension"
+            continue
+        if extension in (key.split('.')[-1] for key in bot.extensions.keys()):
+            embed_msg.description += f"\n- :warning: {extension} is currently already loaded"
+            continue
+        # Try and load extension
+        try:
+            await bot.load_extension(_bot_config['extensions_directory'] + extension)
+            logger.info(f"{extension} loaded")
+            embed_msg.description += f"\n- :white_check_mark: {extension} loaded"
+        except Exception as ex:
+            logger.error(f"Failed to load extension {extension} [{type(ex).__name__}: {ex}]")
+            embed_msg.description += f"\n- :no_entry: {extension} not loaded"
     await ctx.send(embed=embed_msg)
 
 
 @bot.command(aliases=['unloadextensions', 'unloadexts', 'ulexts'],
-             brief=bot_config['unload_extensions_brief'],
-             description=bot_config['unload_extensions_description'])
+             brief=_bot_config['unload_extensions_brief'],
+             description=_bot_config['unload_extensions_description'])
 @discord_commands.has_permissions(administrator=True)
-async def unload_extensions(ctx, *extensions_list):
-    embed_msg = discord.Embed(color=embeds_color)
-    if len(extensions_list) == 0:
-        embed_msg.description = bot_config['no_extensions_provided_message']
-    else:
-        embed_msg.description = bot_config['extensions_output_message_start']
-        for extension_item in extensions_list:
-            if extension_item not in bot_config['extensions']:
-                embed_msg.description += f"\n- :interrobang: {extension_item} is not an extension"
-                continue
-            if extension_item not in (key.split('.')[1] for key in bot.extensions.keys()):
-                embed_msg.description += f"\n- :warning: {extension_item} is currently not loaded"
-                continue
-            try:
-                bot.unload_extension(bot_config['extensions_directory'] + extension_item)
-                print(f">>> {extension_item} unloaded")
-                embed_msg.description += f"\n- :white_check_mark: {extension_item} unloaded"
-            except Exception as ex:
-                print(f">>> Failed to unload extension {extension_item} [{type(ex).__name__}: {ex}]")
-                embed_msg.description += f"\n- :no_entry: {extension_item} not unloaded"
+async def unload_extensions(ctx: discord_commands.Context,
+                            *, extensions: str = discord_commands.parameter(
+            description=_bot_config['extensions_list'])):
+    embed_msg = discord.Embed(color=__embeds_color)
+    embed_msg.description = _bot_config['extensions_output_message_start']
+    logger.info(f"Unloading extensions {extensions}")
+    # Send message with requested extensions to unload information
+    for extension in extensions:
+        # Check for inconsistencies with available extensions
+        if extension not in _bot_config['available_extensions']:
+            embed_msg.description += f"\n- :interrobang: {extension} is not an extension"
+            continue
+        if extension not in (key.split('.')[-1] for key in bot.extensions.keys()):
+            embed_msg.description += f"\n- :warning: {extension} is currently not loaded"
+            continue
+        # Try and unload extension
+        try:
+            await bot.unload_extension(_bot_config['extensions_directory'] + extension)
+            logger.info(f"{extension} unloaded")
+            embed_msg.description += f"\n- :white_check_mark: {extension} unloaded"
+        except Exception as ex:
+            logger.error(f"Failed to unload extension {extension} [{type(ex).__name__}: {ex}]")
+            embed_msg.description += f"\n- :no_entry: {extension} not unloaded"
     await ctx.send(embed=embed_msg)
 
 
 @bot.command(aliases=['reloadextensions', 'reloadexts', 'rlexts'],
-             brief=bot_config['reload_extensions_brief'],
-             description=bot_config['reload_extensions_description'])
+             brief=_bot_config['reload_extensions_brief'],
+             description=_bot_config['reload_extensions_description'])
 @discord_commands.has_permissions(administrator=True)
-async def reload_extensions(ctx, *extensions_list):
-    embed_msg = discord.Embed(color=embeds_color)
-    if len(extensions_list) == 0:
-        embed_msg.description = bot_config['no_extensions_provided_message']
-    else:
-        embed_msg.description = bot_config['extensions_output_message_start']
-        for extension_item in extensions_list:
-            if extension_item not in bot_config['extensions']:
-                embed_msg.description += f"\n- :interrobang: {extension_item} is not an extension"
-                continue
-            if extension_item not in (key.split('.')[1] for key in bot.extensions.keys()):
-                embed_msg.description += f"\n- :warning: {extension_item} is currently not loaded"
-                continue
-            try:
-                bot.reload_extension(bot_config['extensions_directory'] + extension_item)
-                print(f">>> {extension_item} reloaded")
-                embed_msg.description += f"\n- :white_check_mark: {extension_item} reloaded"
-            except Exception as ex:
-                print(f">>> Failed to reload extension {extension_item} [{type(ex).__name__}: {ex}]")
-                embed_msg.description += f"\n- :no_entry: {extension_item} not reloaded"
+async def reload_extensions(ctx: discord_commands.Context,
+                            *, extensions: str = discord_commands.parameter(
+            description=_bot_config['extensions_list'])):
+    embed_msg = discord.Embed(color=__embeds_color)
+    embed_msg.description = _bot_config['extensions_output_message_start']
+    logger.info(f"Reloading extensions {extensions}")
+    # Send message with requested extensions to reload information
+    for extension in extensions:
+        # Check for inconsistencies with available extensions
+        if extension not in _bot_config['available_extensions']:
+            embed_msg.description += f"\n- :interrobang: {extension} is not an extension"
+            continue
+        if extension not in (key.split('.')[-1] for key in bot.extensions.keys()):
+            embed_msg.description += f"\n- :warning: {extension} is currently not loaded"
+            continue
+        # Try and reload extension
+        try:
+            await bot.reload_extension(_bot_config['extensions_directory'] + extension)
+            logger.info(f"{extension} reloaded")
+            embed_msg.description += f"\n- :white_check_mark: {extension} reloaded"
+        except Exception as ex:
+            logger.error(f"Failed to reload extension {extension} [{type(ex).__name__}: {ex}]")
+            embed_msg.description += f"\n- :no_entry: {extension} not reloaded"
     await ctx.send(embed=embed_msg)
 
 
+async def main():
+    # Log basic bot information
+    logger.info(f"{'-' * 80}")
+    logger.info(f"{_bot_config['name']} - Version {_bot_config['version']} - {_bot_config['url']}")
+    logger.info(f"Licensed under {_bot_config['license']} by {_bot_config['author']} <{_bot_config['author_email']}>")
+    logger.info(f"{'-' * 80}")
+    logger.info("Attempting to connect to mongo instance")
+    # Create mongo util singleton instance
+    mongo_uri = 'mongodb://%s:%s@%s:%s' % (
+        quote_plus(os_getenv('MONGO_USER')), quote_plus(os_getenv('MONGO_PASSWORD')),
+        os_getenv('MONGO_HOST'), os_getenv('MONGO_PORT'))
+    mongo_util = MongoUtil(mongo_uri=mongo_uri)
+    # Test reachability
+    ping = mongo_util.ping()
+    if ping:
+        logger.critical(f"Odoaldo won't raise from the sandwiches' crumbles")
+        logger.critical(f"Failed to locate and connect to mongo instance: [{type(ping).__name__}: {ping}]")
+    else:
+        logger.info("Mongo instance is reachable")
+        # Load extensions' init data
+        mongo_util.load_init_data()
+        logger.info(f"Available extensions: {_bot_config['available_extensions']}")
+        logger.info(f"Loading startup extensions: {_bot_config['startup_extensions']}")
+        # Try and load startup extensions
+        for extension in _bot_config['startup_extensions']:
+            try:
+                await bot.load_extension(_bot_config['extensions_directory'] + extension)
+                logger.info(f"{extension} loaded")
+            except Exception as e:
+                logger.error(f"Failed to load extension {extension} [{type(e).__name__}: {e}]")
+        await bot.start(__token)
+
+
 if __name__ == "__main__":
-    print(f"\n\n\n{'-' * 80}")
-    print(f"{bot_config['name']} - Version {bot_config['version']} - {bot_config['url']}")
-    print(f"Licensed under {bot_config['license']} by {bot_config['author']} <{bot_config['author_email']}>")
-    print(f"{'-' * 80}")
-    print(f"\nAvailable extensions: {bot_config['extensions']}")
-    print(f"Attempting to load startup extensions: {bot_config['startup_extensions']}")
-    for extension in bot_config['startup_extensions']:
-        try:
-            bot.load_extension(bot_config['extensions_directory'] + extension)
-            print(extension + ' loaded')
-        except Exception as e:
-            print(f"Failed to load extension {extension} [{type(e).__name__}: {e}]")
-    bot.run(token)
+    asyncio_run(main())

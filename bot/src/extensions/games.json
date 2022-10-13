@@ -1,0 +1,7 @@
+{
+  "embeds_color": "0x2ecc71",
+  "roll_brief": "Roll some dices with arithmetics support",
+  "roll_description": "Roll dices with multiple operations and available use of arithmetics to combine results, adding an optional label to the roll.",
+  "roll_expression": "(without any spaces)",
+  "roll_label": "(can contain spaces)"
+}

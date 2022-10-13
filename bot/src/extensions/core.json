@@ -1,0 +1,16 @@
+{
+  "embeds_color": "0xe67e22",
+  "clear_brief": "Clear the last messages, admins only",
+  "clear_description": "Admins can use this command to clear the most recent messages inside a text channel (excluding the clear command).",
+  "clear_amount": "of messages",
+  "ping_brief": "Test latency",
+  "ping_description": "Used to get an average of the response time from the bot.",
+  "info_message": ">>> *\"Odoaldo, un personaggio particolarmente benvoluto, va in refettorio a mangiare un panino con la mortadella.\"*\n\n**21 Aprile 2018**",
+  "info_brief": "Show basic bot info",
+  "info_description": "Show some more detailed info on the bot, its version, author, repository url, license.",
+  "whoami_brief": "Identify command author",
+  "whoami_description": "Very simple command replying with a mention for the author of the command.",
+  "reset_database_message": "Oh no! Mi hanno cancellato la memoria! Ahhhhhhhhhhhhh! :dizzy_face:\n\n`Odoaldo database was reset to init data`",
+  "reset_database_brief": "Reset Odoaldo database to init data, admins only",
+  "reset_database_description": "Admins can use this command to force a \"factory reset\" of the database documents.\nWarning: use with caution and make sure that the owner of the bot can fix eventual problems."
+}

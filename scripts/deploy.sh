@@ -1,0 +1,5 @@
+mkdir -p $HOME/.local/bin/.odoaldo && cd $_
+curl -OOO https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/bot/scripts/{docker-clean+pull.sh,docker-env.sh,odoaldo_docker-compose.yml}
+cd .. && curl -O https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/bot/scripts/odoaldo
+vim .odoaldo/docker-deploy-env.sh
+cd $HOME && echo "\nMake sure the variables you set are correct and run \"odoaldo\"\n"

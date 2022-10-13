@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  odoaldo-mongo:
+    container_name: odoaldo-mongo
+    image: mongo:latest
+    restart: unless-stopped
+    command: mongod --port $MONGO_PORT --auth
+    ports:
+      - $MONGO_PORT:$MONGO_PORT
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+      - MONGODB_DATA_DIR=/data/db
+    volumes:
+      - mongodata:/data/db
+    networks:
+      - database
+  odoaldo:
+    container_name: odoaldo
+    image: $DOCKERHUB_USER/$DOCKERHUB_REPOSITORY:odoaldo-discordbot
+    restart: on-failure
+    depends_on:
+      - odoaldo-mongo
+    networks:
+      - database
+networks:
+  database:
+    driver: bridge
+volumes:
+  mongodata:
+    driver: local

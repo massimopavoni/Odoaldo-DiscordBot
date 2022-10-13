@@ -1,0 +1,4 @@
+#!/bin/bash
+
+. $HOME/.local/bin/.odoaldo/docker-clean+pull.sh
+docker compose -f $HOME/.local/bin/.odoaldo/odoaldo_docker-compose.yml -p odoaldo up -d

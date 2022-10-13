@@ -76,6 +76,10 @@ curl -OOO https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/mas
 
 cd .. && curl -O https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/odoaldo
 ```
+Remember to make the `odoaldo` script runnable with:
+```
+chmod +x odoaldo
+```
 Once again, edit the `docker-deploy-env.sh` script with the necessary variables:
 ```
 vim .odoaldo/docker-deploy-env.sh
@@ -90,8 +94,9 @@ export MONGO_USER=
 export MONGO_PASSWORD=
 export MONGO_PORT=
 ```
-Remember to login to DockerHub if the repository is private, then simply go back to the home and run:
+Remember to login to DockerHub if the repository is private, then simply go back to the home and run `odoaldo`:
 ```
+cd ~
 odoaldo
 ```
 **Alternatively** to the previous steps, run the deploy script:

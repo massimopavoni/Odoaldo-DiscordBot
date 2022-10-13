@@ -32,7 +32,7 @@ Furthermore, we push the image always with the same tag, as to allow the use of 
 
 Everything following works on Linux based distros (but you can imagine from the steps and the contents of the scripts how you would setup a different host machine), and **only** for `Odoaldo-DiscordBot >= 2.0.0`
 
-### **Step 1:** Building custom docker image
+### **Step 1:** Building Odoaldo custom docker image
 Download the source code archive from the [releases](https://github.com/massimopavoni/Odoaldo-DiscordBot/releases) or clone the repository with:
 ```
 git clone https://github.com/massimopavoni/Odoaldo-DiscordBot.git
@@ -108,7 +108,7 @@ Make sure to have `$HOME/.local/bin` added to your `PATH` variable, to be able t
 echo 'export PATH=$PATH:$HOME/.local/bin' >> ~/.bashrc
 ```
 
-### **Step 3:** Manage Odoaldo with docker
+### **Step 3:** Managing Odoaldo with docker
 The `odoaldo` command will always delete the containers and restart the whole pull and docker compose workflow, meaning you should only use the command when that's needed (i.e. when one of the two images involved is updated).
 
 You should instead manage the Discord bot using the usual docker commands and utilities, as well as checking the logs with `docker attach odoaldo` or `docker logs odoaldo`, if there are some problems, or every once in a while anyway.

@@ -35,13 +35,13 @@ Everything following works on Linux based distros (but you can imagine from the 
 ### **Step 1:** Building custom docker image
 Download the source code archive from the [releases](https://github.com/massimopavoni/Odoaldo-DiscordBot/releases) or clone the repository with:
 ```
-$ git clone https://github.com/massimopavoni/Odoaldo-DiscordBot.git
+git clone https://github.com/massimopavoni/Odoaldo-DiscordBot.git
 ```
 Then place yourself inside the main directory and edit the `docker-build-env.sh` script with the necessary variables:
 ```
-$ cd Odoaldo-DiscordBot
+cd Odoaldo-DiscordBot
 
-$ vim scripts/docker-build-env.sh
+vim scripts/docker-build-env.sh
 ```
 Here's the environment configuration, as per how it's used by the `Dockerfile`.<br>
 Note that the mongo host should be set to `odoaldo-mongo` only if you're using the proposed setup with `docker compose`, since that's gonna use the specified network and container names.
@@ -58,27 +58,27 @@ export MONGO_PORT=
 ```
 Remember to create the DockerHub reporitory you specified and login if it's a private one, then simply run the build and push script:
 ```
-$ . scripts/docker-clean+build+push.sh
+. scripts/docker-clean+build+push.sh
 ```
 **Alternatively** to the previous steps, run the build script inside the directory you wanna build Odoaldo-DiscordBot in:
 ```
-$ . <(curl https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/build.sh)
+. <(curl https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/build.sh)
 ```
 
 ### **Step 2:** Deploying Odoaldo on host machine
 First, create the structure for the `odoaldo` command:
 ```
-$ mkdir -p ~/.local/bin/.odoaldo && cd $_
+mkdir -p ~/.local/bin/.odoaldo && cd $_
 ```
 Then, copy the necessary docker files inside `.odoaldo` and the `odoaldo` command script in `bin`:
 ```
-$ curl -OOO https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/{docker-clean+pull.sh,docker-deploy-env.sh,odoaldo_docker-compose.yml}
+curl -OOO https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/{docker-clean+pull.sh,docker-deploy-env.sh,odoaldo_docker-compose.yml}
 
-$ cd .. && curl -O https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/odoaldo
+cd .. && curl -O https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/odoaldo
 ```
 Once again, edit the `docker-deploy-env.sh` script with the necessary variables:
 ```
-$ vim .odoaldo/docker-deploy-env.sh
+vim .odoaldo/docker-deploy-env.sh
 ```
 Here's the environment configuration:
 ```bash
@@ -92,15 +92,15 @@ export MONGO_PORT=
 ```
 Remember to login to DockerHub if the repository is private, then simply go back to the home and run:
 ```
-$ odoaldo
+odoaldo
 ```
 **Alternatively** to the previous steps, run the deploy script:
 ```
-$ . <(curl https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/deploy.sh)
+. <(curl https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/deploy.sh)
 ```
 Make sure to have `$HOME/.local/bin` added to your `PATH` variable, to be able to run `odoaldo`. If that is not the case, add the export line to the `.bashrc` of the user running docker on the host machine:
 ```
-$ echo 'export PATH=$PATH:$HOME/.local/bin' >> ~/.bashrc
+echo 'export PATH=$PATH:$HOME/.local/bin' >> ~/.bashrc
 ```
 
 ### **Step 3:** Manage Odoaldo with docker

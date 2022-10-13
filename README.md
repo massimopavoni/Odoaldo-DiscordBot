@@ -62,7 +62,7 @@ $ . scripts/docker-clean+build+push.sh
 ```
 **Alternatively** to the previous steps, run the build script inside the directory you wanna build Odoaldo-DiscordBot in:
 ```
-$ . < $(curl https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/build.sh)
+$ . <(curl https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/build.sh)
 ```
 
 ### **Step 2:** Deploying Odoaldo on host machine
@@ -96,7 +96,7 @@ $ odoaldo
 ```
 **Alternatively** to the previous steps, run the deploy script:
 ```
-$ . < $(curl https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/deploy.sh)
+$ . <(curl https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/deploy.sh)
 ```
 Make sure to have `$HOME/.local/bin` added to your `PATH` variable, to be able to run `odoaldo`. If that is not the case, add the export line to the `.bashrc` of the user running docker on the host machine:
 ```

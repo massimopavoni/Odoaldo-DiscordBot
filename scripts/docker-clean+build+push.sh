@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. scripts/docker-env.sh
+. scripts/docker-build-env.sh
 docker stop odoaldo odoaldo-mongo
 docker rm odoaldo odoaldo-mongo
 docker volume rm odoaldo_mongodata

@@ -16,9 +16,13 @@
 - [arithmetic-dice-roller](https://pypi.org/project/arithmetic-dice-roller/) ([LICENSE](https://github.com/massimopavoni/arithmetic-dice-roller/blob/main/LICENSE))
 
 ## **Disclaimer**
-I am **not** responsible for how you use this code, nor am I accountable for whatever important purpose you need Odoaldo to serve: the Discord bot here developed has currently not been tested against most potential security issues, and should not be blindly trusted to be a proper shield between Discord and the machine the code is hosted on.
+I am <ins>**not**</ins> responsible for how you use this code, nor am I accountable for whatever important purpose you need Odoaldo to serve: the Discord bot here developed has currently not been tested against most potential security issues, and should not be blindly trusted to be a proper shield between Discord and the machine the code is hosted on.
 
 That being said, do remember to contact me beforehand in case you decide to use Odoaldo-DiscordBot for your own server.
+
+## **Important**
+The bot is designed to be run on a single server, and for this reason does <ins>**not**</ins> contemplate situations in which he's forced to deal with commands coming from two different servers, especially for voice channel features and dynamic database content.
+I have yet to implement a block for the bot joining other servers, and that is still <ins>not a priority</ins> anyway.
 
 ## **Setup**
 Follow the instructions to build and deploy your Odoaldo bot.

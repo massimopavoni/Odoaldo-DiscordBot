@@ -7,8 +7,8 @@ from discord.ext import commands as discord_commands
 
 from ..utils.mongo import MongoUtil
 
-# Setting up core extension logger
-logger = getLogger(__name__)
+# Setting up extension logger
+logger = getLogger(__name__.split('.', 1)[-1])
 
 # Get bot and extension level config
 with open(path_join('bot', 'bot_config.json'), 'r', encoding='utf-8') as f:
@@ -33,18 +33,19 @@ class Core(discord_commands.Cog):
     @discord_commands.has_permissions(administrator=True)
     async def clear(self, ctx: discord_commands.Context,
                     amount: int = discord_commands.parameter(default=3, description=_config['clear_amount'])):
-        logger.info(f"Clearing {amount} messages from #{ctx.channel.name}")
+        logger.info(f"Clearing {amount} messages from #{ctx.channel}")
         await ctx.channel.purge(limit=amount + 1)
 
     @discord_commands.command(aliases=['marco'],
                               brief=_config['ping_brief'],
                               description=_config['ping_description'])
     async def ping(self, ctx: discord_commands.Context):
+        latency = str(round(self.bot.latency * 1000))
         embed_msg = DiscordEmbed(
-            description=f":ping_pong: {'Polo' if ctx.message.content.lower() == '.marco' else 'Pong'}! "
-                        f"with {str(round(self.bot.latency * 1000))}ms",
+            description=f":ping_pong: {'Polo' if ctx.invoked_with.lower() == '.marco' else 'Pong'}! "
+                        f"with {latency}ms",
             color=self.__embeds_color)
-        logger.info(f"Sending pong in #{ctx.channel.name}")
+        logger.info(f"Bot latency: {latency}ms")
         await ctx.send(embed=embed_msg)
 
     @discord_commands.command(aliases=['odoaldo'],
@@ -59,7 +60,6 @@ class Core(discord_commands.Cog):
         embed_msg.add_field(name='Author', value=_bot_config['author'])
         embed_msg.add_field(name='\u200b', value='\u200b')
         embed_msg.add_field(name='\u200b', value=_config['info_message'], inline=False)
-        logger.info(f"Sending Odoaldo info in #{ctx.channel.name}")
         await ctx.send(embed=embed_msg)
 
     @discord_commands.command(aliases=['chisono'],
@@ -67,7 +67,6 @@ class Core(discord_commands.Cog):
                               description=_config['whoami_description'])
     async def whoami(self, ctx: discord_commands.Context):
         embed_msg = DiscordEmbed(description=f"You are {ctx.message.author.mention}", color=self.__embeds_color)
-        logger.info(f"Sending whoami @{ctx.message.author.name} mention in #{ctx.channel.name}")
         await ctx.send(embed=embed_msg)
 
     @discord_commands.command(

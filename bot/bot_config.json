@@ -9,19 +9,19 @@
   "bot_description": "Ciao! Io sono Odoaldo, un personaggio particolarmente benvoluto, e sono qui perché ti è stato concesso il permesso di invitarmi nella tua gilda Discord...ti è stato dato, sì??\nComunque, posso fare un sacco di cose fighe, quindi semplicemente esplorami! Mlml...",
   "available_extensions": [
     "core",
-    "mortadella",
-    "games"
+    "games",
+    "mortadella"
   ],
   "startup_extensions": [
     "core",
-    "mortadella",
-    "games"
+    "games",
+    "mortadella"
   ],
   "extensions_directory": "src.extensions.",
   "embeds_color": "0xe67e22",
-  "command_not_found_description": "You might want to check the list of commands with `.help`",
-  "missing_required_argument_description": "You might want to check the syntax of the command with `.help {0}`",
-  "command_invoke_error_description": "You might want to check your command invocation.",
+  "command_not_found_description": "You might want to check the list of commands with `{0}help`",
+  "missing_required_argument_description": "You might want to check the syntax of the command with `{0}help {1}`",
+  "command_invoke_error_description": "You might want to check your command invocation with `{0}help {1}` ",
   "generic_error_description": "You might want to ask an administrator to check the bot logs.",
   "shutdown_message": "I'mma take a good nap :sleeping:\n\n`Odoaldo is going offline`",
   "shutdown_brief": "Close the bot connection, admins only",

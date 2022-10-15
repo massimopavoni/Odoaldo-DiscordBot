@@ -21,7 +21,7 @@ I am <ins>**not**</ins> responsible for how you use this code, nor am I accounta
 That being said, do remember to contact me beforehand in case you decide to use Odoaldo-DiscordBot for your own server.
 
 ## **Important**
-The bot is designed to be run on a single server, and for this reason does <ins>**not**</ins> contemplate situations in which he's forced to deal with commands coming from two different servers, especially for voice channel features and dynamic database content.
+The bot is designed to be run on a single server, and for this reason does <ins>**not**</ins> contemplate situations in which he's forced to deal with commands coming from two different servers, especially for voice channel features and dynamic database content.<br>
 I have yet to implement a block for the bot joining other servers, and that is still <ins>not a priority</ins> anyway.
 
 ## **Setup**

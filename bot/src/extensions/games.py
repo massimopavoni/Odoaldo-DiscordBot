@@ -7,8 +7,8 @@ from arithmetic_dice_roller.roller import Roller as ArithmeticDiceRoller, Roller
 from discord import Embed as DiscordEmbed, File as DiscordFile
 from discord.ext import commands as discord_commands
 
-# Setting up core extension logger
-logger = getLogger(__name__)
+# Setting up extension logger
+logger = getLogger(__name__.split('.', 1)[-1])
 
 # Get extension level config
 with open(path_join('bot', 'src', 'extensions', 'games.json'), 'r', encoding='utf-8') as f:
@@ -29,7 +29,8 @@ class Games(discord_commands.Cog):
                               description=_config['roll_description'])
     async def roll(self, ctx: discord_commands.Context,
                    expression: str = discord_commands.parameter(description=_config['roll_expression']),
-                   *, label: str = discord_commands.parameter(default=None, description=_config['roll_label'])):
+                   *,
+                   label: str = discord_commands.parameter(default=None, description=_config['roll_label'])):
         # Create roller for expression
         roller = ArithmeticDiceRoller(expression, label)
         try:
@@ -47,7 +48,6 @@ class Games(discord_commands.Cog):
                                             f"Final result: {roller.final_result}")
             file_roll_info.seek(0)
             embed_msg.add_field(name="Final result", value=f"```{roller.final_result}```")
-            logger.info(f"Sending roll info requested by @{ctx.message.author.name} in #{ctx.channel.name}")
             # Send both message and text file
             await ctx.send(embed=embed_msg)
             await ctx.send(file=DiscordFile(file_roll_info, 'rollinfo.txt'))

@@ -11,6 +11,6 @@
   "whoami_brief": "Identify command author",
   "whoami_description": "Very simple command replying with a mention for the author of the command.",
   "reset_database_message": "Oh no! Mi hanno cancellato la memoria! Ahhhhhhhhhhhhh! :dizzy_face:\n\n`Odoaldo database was reset to init data`",
-  "reset_database_brief": "Reset Odoaldo database to init data, admins only",
+  "reset_database_brief": "Reset database to init data, admins only",
   "reset_database_description": "Admins can use this command to force a \"factory reset\" of the database documents.\nWarning: use with caution and make sure that the owner of the bot can fix eventual problems."
 }

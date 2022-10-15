@@ -6,10 +6,8 @@ from os.path import join as path_join
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
-"""
-Setting up mongo util logger.
-"""
-logger = getLogger(__name__)
+# Setting up util logger
+logger = getLogger(__name__.split('.', 1)[-1])
 
 
 class MongoUtil(object):
@@ -22,7 +20,7 @@ class MongoUtil(object):
 
     def __new__(cls, mongo_uri=None):
         if cls.__instance is None:
-            logger.info("Creating mongo client instance")
+            logger.info("Creating mongo client singleton instance")
             cls.__instance = super(MongoUtil, cls).__new__(cls)
             cls.__mongo_client = MongoClient(mongo_uri)
             # Already prepare default database
@@ -41,12 +39,14 @@ class MongoUtil(object):
         return self.__db
 
     def load_init_data(self, reset=False):
-        logger.info("Resetting database to init data" if reset else "Initializing database with missing data")
+        logger.info(
+            "Resetting mongo database to init data" if reset else "Initializing mongo database with missing data")
         init_data_path = path_join('bot', 'src', 'init_data')
         for file in os_listdir(init_data_path):
             collection = file.replace('.json', '')
             if collection not in self.__db.list_collection_names() or reset:
                 with open(path_join(init_data_path, file), 'r', encoding='utf-8') as f:
                     data = json_load(f)
+                logger.info(f"Resetting {collection} collection")
                 self.__db[collection].drop()
                 self.__db[collection].insert_many(data)

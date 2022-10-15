@@ -5,7 +5,7 @@
   "clear_amount": "of messages",
   "ping_brief": "Test latency",
   "ping_description": "Used to get an average of the response time from the bot.",
-  "info_message": ">>> *\"Odoaldo, un personaggio particolarmente benvoluto, va in refettorio a mangiare un panino con la mortadella.\"*\n\n**21 Aprile 2018**",
+  "info_message": ">>> *\"Odoaldo, un personaggio particolarmente benvoluto, va in refettorio a mangiare un panino con la mortadella.\"*\n\n**21 Aprile 2018 - _Giacomo_**",
   "info_brief": "Show basic bot info",
   "info_description": "Show some more detailed info on the bot, its version, author, repository url, license.",
   "whoami_brief": "Identify command author",

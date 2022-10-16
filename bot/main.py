@@ -20,7 +20,7 @@ with open(path_join('bot', 'bot_config.json'), 'r', encoding='utf-8') as f:
     _bot_config = json_load(f)
 __intents = discord.Intents.default()
 __intents.message_content = True
-bot = discord_commands.Bot(command_prefix='.',
+bot = discord_commands.Bot(command_prefix=_bot_config['command_prefix'],
                            case_insensitive=True,
                            description=_bot_config['bot_description'],
                            intents=__intents)
@@ -32,7 +32,8 @@ __embeds_color = int(_bot_config['embeds_color'], 16)
 async def on_ready():
     # Show Odoaldo activity, suggesting help command
     await bot.change_presence(status=discord.Status.online,
-                              activity=discord.Activity(type=discord.ActivityType.listening, name='.help'))
+                              activity=discord.Activity(type=discord.ActivityType.listening,
+                                                        name=f'{bot.command_prefix}help'))
     logger.info("Odoaldo is online")
 
 

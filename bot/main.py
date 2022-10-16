@@ -34,7 +34,7 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online,
                               activity=discord.Activity(type=discord.ActivityType.listening,
                                                         name=f'{bot.command_prefix}help'))
-    logger.info("Odoaldo is online")
+    logger.info(f"Odoaldo is online: command prefix is {bot.command_prefix}")
 
 
 @bot.event

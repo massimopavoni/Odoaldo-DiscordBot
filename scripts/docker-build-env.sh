@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export BOT_CONFIG=bot_config.json
 export DOCKERHUB_USER=
 export DOCKERHUB_REPOSITORY=
 export DISCORD_TOKEN=

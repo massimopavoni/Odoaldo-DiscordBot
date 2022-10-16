@@ -47,11 +47,12 @@ cd Odoaldo-DiscordBot
 
 vim scripts/docker-build-env.sh
 ```
-Here's the environment configuration, as per how it's used by the `Dockerfile`.<br>
+Here's the build environment configuration, as per how it's used by the `Dockerfile`.<br>
 Note that the mongo host should be set to `odoaldo-mongo` only if you're using the proposed setup with `docker compose`, since that's gonna use the specified network and container names.
 ```bash
 #!/bin/bash
 
+export BOT_CONFIG=bot_config.json
 export DOCKERHUB_USER=
 export DOCKERHUB_REPOSITORY=
 export DISCORD_TOKEN=
@@ -88,7 +89,7 @@ Once again, edit the `docker-deploy-env.sh` script with the necessary variables:
 ```
 vim .odoaldo/docker-deploy-env.sh
 ```
-Here's the environment configuration:
+Here's the deploy environment configuration:
 ```bash
 #!/bin/bash
 

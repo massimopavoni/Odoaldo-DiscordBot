@@ -16,7 +16,7 @@ logging_basicConfig(format='[%(asctime)s] [%(name)-24s] [%(levelname)-8s] - %(me
 logger = getLogger()
 
 # Get bot level config and create discord bot object with intents, token and main bot embeds color
-with open(path_join('bot', 'bot_config.json'), 'r', encoding='utf-8') as f:
+with open(path_join('bot', os_getenv('BOT_CONFIG')), 'r', encoding='utf-8') as f:
     _bot_config = json_load(f)
 __intents = discord.Intents.default()
 __intents.message_content = True

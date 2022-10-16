@@ -1,5 +1,6 @@
 from json import load as json_load
 from logging import getLogger
+from os import getenv as os_getenv
 from os.path import join as path_join
 
 from discord import Embed as DiscordEmbed
@@ -11,7 +12,7 @@ from ..utils.mongo import MongoUtil
 logger = getLogger(__name__.split('.', 1)[-1])
 
 # Get bot and extension level config
-with open(path_join('bot', 'bot_config.json'), 'r', encoding='utf-8') as f:
+with open(path_join('bot', os_getenv('BOT_CONFIG')), 'r', encoding='utf-8') as f:
     _bot_config = json_load(f)
 with open(path_join('bot', 'src', 'extensions', 'core.json'), 'r', encoding='utf-8') as f:
     _config = json_load(f)
@@ -27,7 +28,7 @@ class Core(discord_commands.Cog):
         self.__mongo_util = MongoUtil()
         self.__embeds_color = int(_config['embeds_color'], 16)
 
-    @discord_commands.command(aliases=['purge'],
+    @discord_commands.command(aliases=['cl', 'purge'],
                               brief=_config['clear_brief'],
                               description=_config['clear_description'])
     @discord_commands.has_permissions(administrator=True)

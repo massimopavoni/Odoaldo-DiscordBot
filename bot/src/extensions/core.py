@@ -33,7 +33,7 @@ class Core(discord_commands.Cog):
                               description=_config['clear_description'])
     @discord_commands.has_permissions(administrator=True)
     async def clear(self, ctx: discord_commands.Context,
-                    amount: int = discord_commands.parameter(default=3, description=_config['clear_amount'])):
+                    amount: int = discord_commands.parameter(default=1, description=_config['clear_amount'])):
         logger.info(f"Clearing {amount} messages from #{ctx.channel}")
         await ctx.channel.purge(limit=amount + 1)
 
@@ -67,7 +67,7 @@ class Core(discord_commands.Cog):
                               brief=_config['whoami_brief'],
                               description=_config['whoami_description'])
     async def whoami(self, ctx: discord_commands.Context):
-        embed_msg = DiscordEmbed(description=f"You are {ctx.message.author.mention}", color=self.__embeds_color)
+        embed_msg = DiscordEmbed(description=f"You are {ctx.author.mention}", color=self.__embeds_color)
         await ctx.send(embed=embed_msg)
 
     @discord_commands.command(

@@ -53,9 +53,9 @@ class Mortadella(discord_commands.Cog):
                        *,
                        joke: str = discord_commands.parameter(description=_config['add_joke_joke'])):
         self.__mongo_db[self.__jokes_collection].insert_one({'joke': joke})
-        embed_msg = DiscordEmbed(description=f"New joke added by {ctx.message.author.mention}",
+        embed_msg = DiscordEmbed(description=f"New joke added by {ctx.author.mention}",
                                  color=self.__embeds_color)
-        logger.info(f"New object added by @{ctx.message.author.name} to {self.__jokes_collection} mongo collection")
+        logger.info(f"New object added by @{ctx.author.name} to {self.__jokes_collection} mongo collection")
         await ctx.send(embed=embed_msg)
 
 

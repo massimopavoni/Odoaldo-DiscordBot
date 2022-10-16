@@ -37,7 +37,7 @@ class Games(discord_commands.Cog):
             roller.roll()
             # Compose embed with roll information
             embed_msg = DiscordEmbed(title=roller.label if roller.label else "No label roll", color=self.__embeds_color)
-            embed_msg.add_field(name="Requested by", value=ctx.message.author.mention)
+            embed_msg.add_field(name="Requested by", value=ctx.author.mention)
             embed_msg.add_field(name="Original expression", value=f"```{roller.expression}```", inline=False)
             # And create text file with full roll breakdown
             file_roll_info = StringIO()

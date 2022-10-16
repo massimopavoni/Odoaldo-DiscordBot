@@ -40,7 +40,7 @@ async def on_ready():
 @bot.event
 async def on_command(ctx: discord_commands.Context):
     logger.info(f"Command {bot.command_prefix}{ctx.command} "
-                f"invoked by @{ctx.message.author.name} in #{ctx.channel.name}")
+                f"invoked by @{ctx.author.name} in #{ctx.channel.name}")
 
 
 @bot.event

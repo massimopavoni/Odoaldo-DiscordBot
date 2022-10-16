@@ -11,7 +11,8 @@
   "available_extensions": [
     "core",
     "games",
-    "mortadella"
+    "mortadella",
+    "music"
   ],
   "startup_extensions": [
     "core",

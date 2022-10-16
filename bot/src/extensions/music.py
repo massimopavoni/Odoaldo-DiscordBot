@@ -19,6 +19,7 @@ class Music(discord_commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.description = _config['extension_description']
         self.__embeds_color = int(_config['embeds_color'], 16)
 
 

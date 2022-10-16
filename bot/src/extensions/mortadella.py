@@ -22,6 +22,7 @@ class Mortadella(discord_commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.description = _config['extension_description']
         self.__mongo_db = MongoUtil().db()
         self.__jokes_collection = 'mortadella.jokes'
         self.__embeds_color = int(_config['embeds_color'], 16)

@@ -34,7 +34,7 @@ class Mortadella(discord_commands.Cog):
         embed_msg = DiscordEmbed(title=_config['mortadella_message'], color=self.__embeds_color)
         await ctx.send(embed=embed_msg)
 
-    @discord_commands.command(aliases=['j', 'pun'],
+    @discord_commands.command(aliases=['pun'],
                               brief=_config['joke_brief'],
                               description=_config['joke_description'])
     async def joke(self, ctx: discord_commands.Context):

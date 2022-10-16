@@ -1,4 +1,6 @@
 {
   "extension_description": "A voice extension for music playing capabilities.",
-  "embeds_color": "0x3498db"
+  "embeds_color": "0x3498db",
+  "join_brief": "Join the voice channel of the command author",
+  "join_description": "This command can be used to make the bot join a voice channel without immediately start to play music."
 }

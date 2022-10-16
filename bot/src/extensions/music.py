@@ -22,6 +22,12 @@ class Music(discord_commands.Cog):
         self.description = _config['extension_description']
         self.__embeds_color = int(_config['embeds_color'], 16)
 
+    @discord_commands.command(aliases=['voice'],
+                              brief=_config['join_brief'],
+                              description=_config['join_description'])
+    async def join(self, ctx: discord_commands.Context):
+        await ctx.author.voice.channel.connect()
+
 
 async def setup(bot):
     await bot.add_cog(Music(bot))

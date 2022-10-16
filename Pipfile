@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-"discord.py" = "*"
 arithmetic-dice-roller = "*"
 pymongo = "*"
+"discord.py" = {extras = ["voice"], version = "*"}
 
 [dev-packages]
 

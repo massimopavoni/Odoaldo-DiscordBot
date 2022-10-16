@@ -11,7 +11,8 @@
 > **21 Aprile 2018 - _Giacomo_**
 
 ### **Dependencies**
-- [discord.py](https://pypi.org/project/discord.py/) ([LICENSE](https://github.com/Rapptz/discord.py/blob/master/LICENSE))
+- [discord.py[voice]](https://pypi.org/project/discord.py/) ([LICENSE](https://github.com/Rapptz/discord.py/blob/master/LICENSE))
+    - [PyNaCl](https://pypi.org/project/PyNaCl/) ([LICENSE](https://github.com/pyca/pynacl/blob/main/LICENSE))
 - [pymongo](https://pypi.org/project/pymongo/) ([LICENSE](https://github.com/mongodb/mongo-python-driver/blob/master/LICENSE))
 - [arithmetic-dice-roller](https://pypi.org/project/arithmetic-dice-roller/) ([LICENSE](https://github.com/massimopavoni/arithmetic-dice-roller/blob/main/LICENSE))
 

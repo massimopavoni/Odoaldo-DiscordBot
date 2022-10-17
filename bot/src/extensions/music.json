@@ -1,6 +1,11 @@
 {
   "extension_description": "A voice extension for music playing capabilities.",
   "embeds_color": "0x3498db",
-  "join_brief": "Join the voice channel of the command author",
-  "join_description": "This command can be used to make the bot join a voice channel without immediately start to play music."
+  "connect_no_voice": "{0}, you have to be in a voice channel to make the bot connect.",
+  "connect_already_voice": "The bot is already connected to the voice channel.",
+  "connect_brief": "Connect to the voice channel",
+  "connect_description": "This command can be used to make the bot connect to a voice channel without immediately start to play music.",
+  "disconnect_no_voice": "The bot has not joined any voice channel.",
+  "disconnect_brief": "Disconnect from the voice channel",
+  "disconnect_description": "This command can be used to make the bot disconnect from its current voice channel."
 }

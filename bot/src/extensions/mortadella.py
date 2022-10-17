@@ -20,25 +20,28 @@ class Mortadella(discord_commands.Cog):
     Mortadella bot extension.
     """
 
-    def __init__(self, bot):
+    def __init__(self, bot: discord_commands.Bot):
         self.bot = bot
         self.description = _config['extension_description']
         self.__mongo_db = MongoUtil().db()
         self.__jokes_collection = 'mortadella.jokes'
         self.__embeds_color = int(_config['embeds_color'], 16)
 
-    @discord_commands.command(aliases=['morta', 'della', 'mortade'],
+    @discord_commands.command(name='mortadella',
+                              aliases=['morta', 'della', 'mortade'],
                               brief=_config['mortadella_brief'],
                               description=_config['mortadella_description'])
     async def mortadella(self, ctx: discord_commands.Context):
         embed_msg = DiscordEmbed(title=_config['mortadella_message'], color=self.__embeds_color)
         await ctx.send(embed=embed_msg)
 
-    @discord_commands.command(aliases=['pun'],
+    @discord_commands.command(name='joke',
+                              aliases=['pun'],
                               brief=_config['joke_brief'],
                               description=_config['joke_description'])
     async def joke(self, ctx: discord_commands.Context):
         collection = self.__mongo_db[self.__jokes_collection]
+        # Get random joke if collection has any
         if collection.count_documents({}):
             embed_msg = DiscordEmbed(description=collection.aggregate([{'$sample': {'size': 1}}]).next()['joke'],
                                      color=self.__embeds_color)
@@ -47,7 +50,8 @@ class Mortadella(discord_commands.Cog):
             logger.warning(f"No objects available in {self.__jokes_collection} mongo collection")
         await ctx.send(embed=embed_msg)
 
-    @discord_commands.command(aliases=['addjoke', 'addj'],
+    @discord_commands.command(name='addjoke',
+                              aliases=['addj'],
                               brief=_config['add_joke_brief'],
                               description=_config['add_joke_description'])
     async def add_joke(self, ctx: discord_commands.Context,

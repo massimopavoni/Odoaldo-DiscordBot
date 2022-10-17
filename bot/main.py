@@ -1,3 +1,4 @@
+import typing
 from asyncio import run as asyncio_run
 from json import load as json_load
 from logging import basicConfig as logging_basicConfig, getLogger, INFO
@@ -85,7 +86,8 @@ async def on_command_error(ctx: discord_commands.Context, error: discord_command
     await ctx.send(embed=embed_msg)
 
 
-@bot.command(aliases=['close', 'stop', 'die'],
+@bot.command(name='shutdown',
+             aliases=['close', 'die'],
              brief=_bot_config['shutdown_brief'],
              description=_bot_config['shutdown_description'])
 @discord_commands.has_permissions(administrator=True)
@@ -100,7 +102,8 @@ async def shutdown(ctx: discord_commands.Context):
     await bot.close()
 
 
-@bot.command(aliases=['getextensions', 'getexts', 'gexts', 'extensions', 'exts'],
+@bot.command(name='getextensions',
+             aliases=['getexts', 'gexts', 'extensions', 'exts'],
              brief=_bot_config['get_extensions_brief'],
              description=_bot_config['get_extensions_description'])
 @discord_commands.has_permissions(administrator=True)
@@ -115,7 +118,8 @@ async def get_extensions(ctx: discord_commands.Context):
     await ctx.send(embed=embed_msg)
 
 
-@bot.command(aliases=['loadextensions', 'loadexts', 'lexts'],
+@bot.command(name='loadextensions',
+             aliases=['loadexts', 'lexts'],
              brief=_bot_config['load_extensions_brief'],
              description=_bot_config['load_extensions_description'])
 @discord_commands.has_permissions(administrator=True)
@@ -148,7 +152,8 @@ async def load_extensions(ctx: discord_commands.Context,
     await ctx.send(embed=embed_msg)
 
 
-@bot.command(aliases=['unloadextensions', 'unloadexts', 'ulexts'],
+@bot.command(name='unloadextensions',
+             aliases=['unloadexts', 'ulexts'],
              brief=_bot_config['unload_extensions_brief'],
              description=_bot_config['unload_extensions_description'])
 @discord_commands.has_permissions(administrator=True)
@@ -181,7 +186,8 @@ async def unload_extensions(ctx: discord_commands.Context,
     await ctx.send(embed=embed_msg)
 
 
-@bot.command(aliases=['reloadextensions', 'reloadexts', 'rlexts'],
+@bot.command(name='reloadextensions',
+             aliases=['reloadexts', 'rlexts'],
              brief=_bot_config['reload_extensions_brief'],
              description=_bot_config['reload_extensions_description'])
 @discord_commands.has_permissions(administrator=True)

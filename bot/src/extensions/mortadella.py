@@ -47,7 +47,7 @@ class Mortadella(discord_commands.Cog):
             logger.warning(f"No objects available in {self.__jokes_collection} mongo collection")
         await ctx.send(embed=embed_msg)
 
-    @discord_commands.command(aliases=['addjoke', 'ajoke', 'addj', 'aj'],
+    @discord_commands.command(aliases=['addjoke', 'addj'],
                               brief=_config['add_joke_brief'],
                               description=_config['add_joke_description'])
     async def add_joke(self, ctx: discord_commands.Context,

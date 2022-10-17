@@ -14,6 +14,7 @@
 - [discord.py[voice]](https://pypi.org/project/discord.py/) ([LICENSE](https://github.com/Rapptz/discord.py/blob/master/LICENSE))
     - [PyNaCl](https://pypi.org/project/PyNaCl/) ([LICENSE](https://github.com/pyca/pynacl/blob/main/LICENSE))
 - [pymongo](https://pypi.org/project/pymongo/) ([LICENSE](https://github.com/mongodb/mongo-python-driver/blob/master/LICENSE))
+- [yt-dlp](https://pypi.org/project/yt-dlp/) ([LICENSE](https://github.com/yt-dlp/yt-dlp/blob/master/LICENSE))
 - [arithmetic-dice-roller](https://pypi.org/project/arithmetic-dice-roller/) ([LICENSE](https://github.com/massimopavoni/arithmetic-dice-roller/blob/main/LICENSE))
 
 ## **Disclaimer**

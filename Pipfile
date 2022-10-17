@@ -7,6 +7,7 @@ name = "pypi"
 arithmetic-dice-roller = "*"
 pymongo = "*"
 "discord.py" = {extras = ["voice"], version = "*"}
+yt-dlp = "*"
 
 [dev-packages]
 

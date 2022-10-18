@@ -38,8 +38,6 @@ class Core(discord_commands.Cog):
                     amount: int = discord_commands.parameter(default=1, description=_config['clear_amount'])):
         logger.info(f"Clearing {amount} messages from #{ctx.channel}")
         await ctx.channel.purge(limit=amount + 1)
-        embed_msg = DiscordEmbed(description=_config['clear_message'].format(amount), colour=self.__embeds_color)
-        await ctx.send(embed=embed_msg, delete_after=4)
 
     @discord_commands.command(name='ping',
                               aliases=['marco'],

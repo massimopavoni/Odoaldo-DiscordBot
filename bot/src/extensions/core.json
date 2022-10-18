@@ -1,6 +1,7 @@
 {
   "extension_description": "A core extension for the bot, introducing more utility commands.",
   "embeds_color": "0xe67e22",
+  "clear_message": "Cleared {0} messages.",
   "clear_brief": "Clear the last messages, admins only",
   "clear_description": "Admins can use this command to clear the most recent messages inside a text channel (excluding the clear command).",
   "clear_amount": "of messages",

@@ -1,6 +1,22 @@
 {
   "extension_description": "A voice extension for music playing capabilities.",
   "embeds_color": "0x3498db",
+  "ytdl_format_options": {
+    "format": "bestaudio/best",
+    "outtmpl": "%(extractor)s-%(id)s-%(title)s.%(ext)s",
+    "restrictfilenames": true,
+    "noplaylist": true,
+    "nocheckcertificate": true,
+    "ignoreerrors": false,
+    "logtostderr": false,
+    "quiet": true,
+    "no_warnings": true,
+    "default_search": "auto",
+    "source_address": "0.0.0.0"
+  },
+  "ffmpeg_options": {
+    "options": "-vn"
+  },
   "connect_no_voice": "{0}, you have to be in a voice channel to make the bot connect.",
   "connect_already_voice": "The bot is already connected to the voice channel.",
   "connect_brief": "Connect to the voice channel",

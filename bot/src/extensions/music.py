@@ -2,8 +2,9 @@ from json import load as json_load
 from logging import getLogger
 from os.path import join as path_join
 
-from discord import Embed as DiscordEmbed, VoiceClient
+from discord import Embed as DiscordEmbed, PCMVolumeTransformer, VoiceClient
 from discord.ext import commands as discord_commands
+from yt_dlp import utils as ytdl_utils, YoutubeDL
 
 # Setting up extension logger
 logger = getLogger(__name__.split('.', 1)[-1])
@@ -11,6 +12,16 @@ logger = getLogger(__name__.split('.', 1)[-1])
 # Get extension level config
 with open(path_join('bot', 'src', 'extensions', 'music.json'), 'r', encoding='utf-8') as f:
     _config = json_load(f)
+__ytdl_format_options = _config['ytdl_format_options']
+__ffmpeg_options = _config['ffmpeg_options']
+
+# Suppress ytdl noise about console usage from errors
+ytdl_utils.bug_reports_message = lambda: ''
+__ytdl = YoutubeDL(__ytdl_format_options)
+
+
+class YTDLSource(PCMVolumeTransformer):
+    pass
 
 
 class Music(discord_commands.Cog):

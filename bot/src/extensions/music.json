@@ -3,6 +3,8 @@
   "embeds_color": "0x3498db",
   "ytdl_format_options": {
     "format": "bestaudio/best",
+    "extractaudio": true,
+    "audioformat": "mp3",
     "outtmpl": "%(extractor)s-%(id)s-%(title)s.%(ext)s",
     "restrictfilenames": true,
     "noplaylist": true,
@@ -15,13 +17,15 @@
     "source_address": "0.0.0.0"
   },
   "ffmpeg_options": {
+    "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
     "options": "-vn"
   },
   "connect_no_voice": "{0}, you have to be in a voice channel to make the bot connect.",
-  "connect_already_voice": "The bot is already connected to the voice channel.",
   "connect_brief": "Connect to the voice channel",
   "connect_description": "This command can be used to make the bot connect to a voice channel without immediately start to play music.",
   "disconnect_no_voice": "The bot has not joined any voice channel.",
   "disconnect_brief": "Disconnect from the voice channel",
-  "disconnect_description": "This command can be used to make the bot disconnect from its current voice channel."
+  "disconnect_description": "This command can be used to make the bot disconnect from its current voice channel.",
+  "play_brief": "Play some music",
+  "play_description": "This command is used directly to play or queue up music from various sources, YouTube being the default one."
 }

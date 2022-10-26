@@ -21,6 +21,7 @@ with open(path_join('bot', os_getenv('BOT_CONFIG')), 'r', encoding='utf-8') as f
     _bot_config = json_load(f)
 __intents = discord.Intents.default()
 __intents.message_content = True
+__intents.voice_states = True
 bot = discord_commands.Bot(command_prefix=_bot_config['command_prefix'],
                            case_insensitive=True,
                            description=_bot_config['bot_description'],

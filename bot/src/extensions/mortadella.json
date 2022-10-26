@@ -9,5 +9,6 @@
   "joke_description": "Randomly select one from a pool of jokes.",
   "add_joke_brief": "Add a new joke",
   "add_joke_description": "Add a new joke to the pool in the database.",
-  "add_joke_joke": "to add"
+  "add_joke_joke": "to add",
+  "add_joke_added": "New joke added by {0}"
 }

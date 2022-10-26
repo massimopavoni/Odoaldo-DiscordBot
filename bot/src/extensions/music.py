@@ -44,34 +44,39 @@ class YTDLSource(PCMVolumeTransformer):
     YTDLSource class for music.
     """
 
+    # Libraries options and ytdl object
     __ytdl_format_options = _config['ytdl_format_options']
     __ffmpeg_options = _config['ffmpeg_options']
     __ytdl = YoutubeDL(__ytdl_format_options)
 
     def __init__(self, ctx: discord_commands.Context, source: FFmpegPCMAudio, *, data, volume=0.5):
+        # Parent constructor
         super().__init__(source, volume)
+        # Get various information about the request and the source data
         self.requester = ctx.author
         self.channel = ctx.channel
         self.data = data
         self.uploader = data.get('uploader')
         self.uploader_url = data.get('uploader_url')
         date = data.get('upload_date')
-        self.upload_date = f"{date[6:8]}.{date[4:6]}.{date[0:4]}"
+        self.upload_date = f"{date[0:4]}.{date[4:6]}.{date[6:8]}"
         self.title = data.get('title')
         self.thumbnail = data.get('thumbnail')
-        self.description = data.get('description')
         self.duration = self.parse_duration(int(data.get('duration')))
         self.url = data.get('webpage_url')
         self.stream_url = data.get('url')
 
     def __str__(self):
-        return '**{0.title}** by **{0.uploader}**'.format(self)
+        return f"**{self.title}** by **{self.uploader}**"
 
     @classmethod
     async def create(cls, ctx: discord_commands.Context, search, *, loop=None):
+        # Static method to create class object
         loop = loop or asyncio_get_event_loop()
+        # Run a partial of ytdl extract_info method with search, inside executor
         data = await loop.run_in_executor(None, functools_partial(cls.__ytdl.extract_info, search, download=False,
                                                                   process=False))
+        # Find info in data and get first result of playlists
         if not data:
             raise YTDLError(f"Could not find any music that matches `{search}`")
         if 'entries' not in data:
@@ -85,6 +90,7 @@ class YTDLSource(PCMVolumeTransformer):
             if process_info is None:
                 raise YTDLError(f"Could not find anything that matches `{search}`")
         webpage_url = process_info['webpage_url']
+        # Get actual info and get first result of playlists
         processed_info = await loop.run_in_executor(None, functools_partial(cls.__ytdl.extract_info, webpage_url,
                                                                             download=False))
         if processed_info is None:
@@ -98,11 +104,13 @@ class YTDLSource(PCMVolumeTransformer):
                     info = processed_info['entries'].pop(0)
                 except IndexError:
                     raise YTDLError(f"Could not retrieve any matches for `{webpage_url}`")
+        # Create object and audio with ffmpeg options
         return cls(ctx, FFmpegPCMAudio(info['url'], before_options=cls.__ffmpeg_options['before_options'],
                                        options=cls.__ffmpeg_options['options']), data=info)
 
     @staticmethod
     def parse_duration(duration):
+        # Parse seconds duration
         minutes, seconds = divmod(duration, 60)
         hours, minutes = divmod(minutes, 60)
         days, hours = divmod(hours, 24)
@@ -125,17 +133,17 @@ class MusicInfo:
 
     def __init__(self, source: YTDLSource):
         self.source = source
-        self.requester = source.requester
         self.__embeds_color = int(_config['embeds_color'], 16)
 
     def create_embed(self):
-        embed_msg = (DiscordEmbed(title='Now playing',
-                                  description='```\n{0.source.title}\n```'.format(self),
-                                  color=self.__embeds_color))
+        # Create organized embed for music currently playing
+        embed_msg = (
+            DiscordEmbed(title='Now playing', description=f"```\n{self.source.title}\n```", color=self.__embeds_color))
         embed_msg.add_field(name='Duration', value=self.source.duration)
-        embed_msg.add_field(name='Requested by', value=self.requester.mention)
-        embed_msg.add_field(name='Uploader', value='[{0.source.uploader}]({0.source.uploader_url})'.format(self))
-        embed_msg.add_field(name='URL', value='[Click]({0.source.url})'.format(self))
+        embed_msg.add_field(name='Requested by', value=self.source.requester.mention)
+        embed_msg.add_field(name='Uploader', value=f"[{self.source.uploader}]({self.source.uploader_url})")
+        embed_msg.add_field(name='Upload date', value=self.source.upload_date)
+        embed_msg.add_field(name='URL', value=f"[Click me]({self.source.url})")
         embed_msg.set_thumbnail(url=self.source.thumbnail)
         return embed_msg
 
@@ -337,10 +345,9 @@ class Music(discord_commands.Cog):
             if self.voice_state.is_playing:
                 if self.voice_state.voice.is_playing():
                     self.voice_state.voice.pause()
-                    await ctx.message.add_reaction('⏯️')
                 elif self.voice_state.voice.is_paused():
                     self.voice_state.voice.resume()
-                    await ctx.message.add_reaction('⏯️')
+                await ctx.message.add_reaction('⏯️')
 
     @discord_commands.command(name='stop',
                               aliases=['nomusic'],
@@ -406,7 +413,7 @@ class Music(discord_commands.Cog):
             end = start + page_density
             queue = '\n'.join([f"`{i + 1}.` [**{music.source.title}**]({music.source.url})" for i, music in
                                enumerate(self.voice_state.music_queue[start:end], start=start)])
-            embed_msg.description = f"**{queue_len} tracks:**\n\n{queue}"
+            embed_msg.description = f"Queue (**{queue_len} tracks):**\n\n{queue}"
             embed_msg.set_footer(text=f"Page {page}/{pages}")
         await ctx.send(embed=embed_msg)
 

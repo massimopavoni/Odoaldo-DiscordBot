@@ -21,7 +21,7 @@
     "options": "-vn"
   },
   "voice_timeout": 300,
-  "starting_volume": 0.2,
+  "starting_volume": 0.3,
   "no_player": "Nothing is being played at the moment.",
   "queue_empty": "The queue is empty.",
   "connect_no_voice": "{0}, you have to be in a voice channel to make the bot connect.",

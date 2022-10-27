@@ -1,4 +1,3 @@
-import typing
 from asyncio import run as asyncio_run
 from json import load as json_load
 from logging import basicConfig as logging_basicConfig, getLogger, INFO

@@ -8,7 +8,7 @@ from os.path import join as path_join
 from random import shuffle as random_shuffle
 
 from async_timeout import timeout
-from discord import Embed as DiscordEmbed, FFmpegPCMAudio, PCMVolumeTransformer
+from discord import Embed as DiscordEmbed, FFmpegPCMAudio, PCMVolumeTransformer, VoiceClient
 from discord.ext import commands as discord_commands
 from yt_dlp import utils as ytdl_utils, YoutubeDL
 
@@ -144,6 +144,7 @@ class MusicInfo:
         embed_msg.add_field(name='Uploader', value=f"[{self.source.uploader}]({self.source.uploader_url})")
         embed_msg.add_field(name='Upload date', value=self.source.upload_date)
         embed_msg.add_field(name='URL', value=f"[Click me]({self.source.url})")
+        embed_msg.add_field(name='\u200b', value='\u200b')
         embed_msg.set_thumbnail(url=self.source.thumbnail)
         return embed_msg
 
@@ -181,10 +182,11 @@ class VoiceState:
     """
 
     def __init__(self, bot: discord_commands.Bot, ctx: discord_commands.Context):
+        # Constructor with bot object and context for playing, specific current music and queue, looping and volume
         self.bot = bot
         self.__ctx = ctx
-        self.current = None
-        self.voice = None
+        self.current: MusicInfo = None
+        self.voice: VoiceClient = None
         self.next = Event()
         self.music_queue = MusicQueue()
         self.__loop = False
@@ -228,11 +230,15 @@ class VoiceState:
                     self.bot.loop.create_task(self.stop())
                     return
             else:
+                # If loop, recreate the same source
                 new_source = await YTDLSource.create(self.__ctx, self.current.source.url, loop=self.bot.loop)
                 new_source = MusicInfo(new_source)
                 self.current = new_source
+            # Then update volume and play
             self.current.source.volume = self.__volume
             self.voice.play(self.current.source, after=self.play_next_song)
+            logger.info(f"Playing music on <{self.voice.channel.name}> "
+                        f"requested by @{self.current.source.requester.name} in #{self.__ctx.channel.name}")
             await self.current.source.channel.send(embed=self.current.create_embed())
             await self.next.wait()
 
@@ -242,13 +248,16 @@ class VoiceState:
         self.next.set()
 
     def skip(self):
+        # Clear votes pool and skip
         self.skip_votes.clear()
         if self.is_playing:
             self.voice.stop()
 
     async def stop(self):
+        # Stopping clears the queue and disconnects
         self.music_queue.clear()
         if self.voice:
+            logger.info(f"Disconnecting from <{self.voice.channel.name}>")
             await self.voice.disconnect()
             self.voice = None
 
@@ -265,19 +274,23 @@ class Music(discord_commands.Cog):
         self.voice_state: VoiceState = None
 
     def get_voice_state(self, ctx: discord_commands.Context):
+        # Get existing voice or create it
         if not self.voice_state:
             self.voice_state = VoiceState(self.bot, ctx)
         return self.voice_state
 
     def cog_unload(self):
+        # Stop voice task
         self.bot.loop.create_task(self.voice_state.stop())
 
     def cog_check(self, ctx: discord_commands.Context):
+        # DM messages check
         if not ctx.guild:
             raise discord_commands.NoPrivateMessage("This command cannot be used in DM channels.")
         return True
 
     async def cog_before_invoke(self, ctx: discord_commands.Context):
+        # Get voice before every command
         self.voice_state = self.get_voice_state(ctx)
 
     @discord_commands.command(name='connect',
@@ -285,11 +298,27 @@ class Music(discord_commands.Cog):
                               brief=_config['connect_brief'],
                               description=_config['connect_description'])
     async def connect(self, ctx: discord_commands.Context):
-        destination = ctx.author.voice.channel
-        if self.voice_state.voice:
-            await self.voice_state.voice.move_to(destination)
+        if not ctx.author.voice or not ctx.author.voice.channel:
+            embed_msg = DiscordEmbed(description=_config['connect_no_voice'].format(ctx.author.mention),
+                                     color=self.__embeds_color)
+            await ctx.send(embed=embed_msg)
         else:
-            self.voice_state.voice = await destination.connect()
+            destination_channel = ctx.author.voice.channel
+            if self.voice_state.voice:
+                if ctx.voice_client.channel != destination_channel and ctx.author.guild_permissions.administrator:
+                    # Move to voice channel
+                    logger.info(f"Moving from <{self.voice_state.voice.channel.name}> to <{destination_channel.name}>")
+                    await self.voice_state.voice.move_to(destination_channel)
+                    await ctx.message.add_reaction('🆙')
+                else:
+                    embed_msg = DiscordEmbed(description=_config['connect_no_move'].format(ctx.author.mention),
+                                             color=self.__embeds_color)
+                    await ctx.send(embed=embed_msg)
+            else:
+                # Connect to voice channel
+                logger.info(f"Connecting to <{destination_channel.name}>")
+                self.voice_state.voice = await destination_channel.connect()
+                await ctx.message.add_reaction('🆙')
 
     @discord_commands.command(name='disconnect',
                               aliases=['leave'],
@@ -314,6 +343,7 @@ class Music(discord_commands.Cog):
             embed_msg.description = _config['no_player']
             await ctx.send(embed=embed_msg)
         else:
+            # Change volume
             if volume < 0:
                 volume = 0
             elif volume > 100:
@@ -331,6 +361,7 @@ class Music(discord_commands.Cog):
             embed_msg = DiscordEmbed(description=_config['no_player'], color=self.__embeds_color)
             await ctx.send(embed=embed_msg)
         else:
+            # Show currently playing music
             await ctx.send(embed=self.voice_state.current.create_embed())
 
     @discord_commands.command(name='pauseresume',
@@ -342,12 +373,14 @@ class Music(discord_commands.Cog):
             embed_msg = DiscordEmbed(description=_config['no_player'], color=self.__embeds_color)
             await ctx.send(embed=embed_msg)
         else:
-            if self.voice_state.is_playing:
-                if self.voice_state.voice.is_playing():
-                    self.voice_state.voice.pause()
-                elif self.voice_state.voice.is_paused():
-                    self.voice_state.voice.resume()
-                await ctx.message.add_reaction('⏯️')
+            # Toggle pause
+            if self.voice_state.voice.is_playing():
+                logger.info(f"Music player pausing on <{self.voice_state.voice.channel.name}>")
+                self.voice_state.voice.pause()
+            elif self.voice_state.voice.is_paused():
+                logger.info(f"Music player resuming on <{self.voice_state.voice.channel.name}>")
+                self.voice_state.voice.resume()
+            await ctx.message.add_reaction('⏯️')
 
     @discord_commands.command(name='stop',
                               aliases=['nomusic'],
@@ -358,10 +391,11 @@ class Music(discord_commands.Cog):
             embed_msg = DiscordEmbed(description=_config['no_player'], color=self.__embeds_color)
             await ctx.send(embed=embed_msg)
         else:
+            # Stop music
+            logger.info(f"Music player stopping on <{self.voice_state.voice.channel.name}>")
             self.voice_state.music_queue.clear()
-            if not self.voice_state.is_playing:
-                self.voice_state.voice.stop()
-                await ctx.message.add_reaction('⏹️')
+            self.voice_state.voice.stop()
+            await ctx.message.add_reaction('⏹️')
 
     @discord_commands.command(name='skip',
                               aliases=['next'],
@@ -373,13 +407,12 @@ class Music(discord_commands.Cog):
             await ctx.send(embed=embed_msg)
         else:
             voter = ctx.author
-            if voter == self.voice_state.current.requester:
-                await ctx.message.add_reaction('⏭️')
-                self.voice_state.skip()
-            elif voter.id not in self.voice_state.skip_votes:
+            if voter.id not in self.voice_state.skip_votes:
                 self.voice_state.skip_votes.add(voter.id)
                 total_votes = len(self.voice_state.skip_votes)
-                if total_votes >= _config['skip_votes_amount']:
+                if total_votes >= _config['skip_votes_amount'] or voter == self.voice_state.current.source.requester:
+                    # Skip music
+                    logger.info(f"Music player skipping on <{self.voice_state.voice.channel.name}>")
                     await ctx.message.add_reaction('⏭️')
                     self.voice_state.skip()
                 else:
@@ -403,6 +436,7 @@ class Music(discord_commands.Cog):
         if not queue_len:
             embed_msg.description = _config['queue_empty']
         else:
+            # Show wanted queue page
             page_density = _config['show_queue_page_density']
             pages = math_ceil(queue_len / page_density)
             if page < 1:
@@ -426,6 +460,8 @@ class Music(discord_commands.Cog):
             embed_msg = DiscordEmbed(description=_config['queue_empty'], color=self.__embeds_color)
             await ctx.send(embed=embed_msg)
         else:
+            # Shuffle music in queue
+            logger.info("Music player shuffling queue")
             self.voice_state.music_queue.shuffle()
             await ctx.message.add_reaction('🔀')
 
@@ -440,6 +476,8 @@ class Music(discord_commands.Cog):
             embed_msg = DiscordEmbed(description=_config['queue_empty'], color=self.__embeds_color)
             await ctx.send(embed=embed_msg)
         else:
+            # Remove music
+            logger.info(f"Music player removing track at index {index - 1} from queue")
             self.voice_state.music_queue.remove(index - 1)
             await ctx.message.add_reaction('⤴️')
 
@@ -452,6 +490,8 @@ class Music(discord_commands.Cog):
             embed_msg = DiscordEmbed(description=_config['no_player'], color=self.__embeds_color)
             await ctx.send(embed=embed_msg)
         else:
+            # Toggle current track loop
+            logger.info(f"Music player {'disabling' if self.voice_state.loop else 'enabling'} current track repeat")
             self.voice_state.loop = not self.voice_state.loop
             await ctx.message.add_reaction('🔂')
 
@@ -464,24 +504,17 @@ class Music(discord_commands.Cog):
         if not self.voice_state.voice:
             await ctx.invoke(self.connect)
         async with ctx.typing():
+            # Try and enqueue requested music
             try:
                 source = await YTDLSource.create(ctx, search, loop=self.bot.loop)
             except YTDLError as e:
                 raise e
             else:
+                logger.info(f"Music player enqueuing track requested by @{source.requester.name}")
                 track = MusicInfo(source)
                 await self.voice_state.music_queue.put(track)
                 embed_msg = DiscordEmbed(description=f"Enqueued {str(source)}", color=self.__embeds_color)
                 await ctx.send(embed=embed_msg)
-
-    @connect.before_invoke
-    @play.before_invoke
-    async def ensure_voice_state(self, ctx: discord_commands.Context):
-        if not ctx.author.voice or not ctx.author.voice.channel:
-            raise discord_commands.CommandError("User is not connected to any voice channel.")
-        if ctx.voice_client:
-            if ctx.voice_client.channel != ctx.author.voice.channel:
-                raise discord_commands.CommandError("Bot is already in a voice channel.")
 
 
 async def setup(bot):

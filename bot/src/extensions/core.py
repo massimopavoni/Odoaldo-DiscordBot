@@ -23,21 +23,24 @@ class Core(discord_commands.Cog):
     Core bot extension.
     """
 
-    def __init__(self, bot):
+    def __init__(self, bot: discord_commands.Bot):
         self.bot = bot
+        self.description = _config['extension_description']
         self.__mongo_util = MongoUtil()
         self.__embeds_color = int(_config['embeds_color'], 16)
 
-    @discord_commands.command(aliases=['cl', 'purge'],
+    @discord_commands.command(name='clear',
+                              aliases=['cl', 'purge'],
                               brief=_config['clear_brief'],
                               description=_config['clear_description'])
     @discord_commands.has_permissions(administrator=True)
     async def clear(self, ctx: discord_commands.Context,
-                    amount: int = discord_commands.parameter(default=3, description=_config['clear_amount'])):
+                    amount: int = discord_commands.parameter(default=1, description=_config['clear_amount'])):
         logger.info(f"Clearing {amount} messages from #{ctx.channel}")
         await ctx.channel.purge(limit=amount + 1)
 
-    @discord_commands.command(aliases=['marco'],
+    @discord_commands.command(name='ping',
+                              aliases=['marco'],
                               brief=_config['ping_brief'],
                               description=_config['ping_description'])
     async def ping(self, ctx: discord_commands.Context):
@@ -49,7 +52,8 @@ class Core(discord_commands.Cog):
         logger.info(f"Bot latency: {latency}ms")
         await ctx.send(embed=embed_msg)
 
-    @discord_commands.command(aliases=['odoaldo'],
+    @discord_commands.command(name='info',
+                              aliases=['odoaldo'],
                               brief=_config['info_brief'],
                               description=_config['info_description'])
     async def info(self, ctx: discord_commands.Context):
@@ -63,17 +67,18 @@ class Core(discord_commands.Cog):
         embed_msg.add_field(name='\u200b', value=_config['info_message'], inline=False)
         await ctx.send(embed=embed_msg)
 
-    @discord_commands.command(aliases=['chisono'],
+    @discord_commands.command(name='whoami',
+                              aliases=['chisono'],
                               brief=_config['whoami_brief'],
                               description=_config['whoami_description'])
     async def whoami(self, ctx: discord_commands.Context):
-        embed_msg = DiscordEmbed(description=f"You are {ctx.message.author.mention}", color=self.__embeds_color)
+        embed_msg = DiscordEmbed(description=f"You are {ctx.author.mention}", color=self.__embeds_color)
         await ctx.send(embed=embed_msg)
 
-    @discord_commands.command(
-        aliases=['resetdatabase', 'databasereset', 'resetdata', 'datareset', 'resetdb', 'dbreset'],
-        brief=_config['reset_database_brief'],
-        description=_config['reset_database_description'])
+    @discord_commands.command(name='resetdatabase',
+                              aliases=['databasereset', 'resetdata', 'datareset', 'resetdb', 'dbreset'],
+                              brief=_config['reset_database_brief'],
+                              description=_config['reset_database_description'])
     @discord_commands.has_permissions(administrator=True)
     async def reset_database(self, ctx: discord_commands.Context):
         self.__mongo_util.load_init_data(reset=True)

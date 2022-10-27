@@ -1,6 +1,6 @@
 {
   "name": "Odoaldo-DiscordBot",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "url": "https://github.com/massimopavoni/Odoaldo-DiscordBot",
   "license": "GNU General Public License v3.0",
   "author": "Massimo Pavoni",
@@ -11,7 +11,8 @@
   "available_extensions": [
     "core",
     "games",
-    "mortadella"
+    "mortadella",
+    "music"
   ],
   "startup_extensions": [
     "core",

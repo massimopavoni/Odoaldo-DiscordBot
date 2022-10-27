@@ -20,24 +20,26 @@ class Games(discord_commands.Cog):
     Games bot extension.
     """
 
-    def __init__(self, bot):
+    def __init__(self, bot: discord_commands.Bot):
         self.bot = bot
+        self.description = _config['extension_description']
         self.__embeds_color = int(_config['embeds_color'], 16)
 
-    @discord_commands.command(aliases=['r', 'rolldice', 'rolld', 'rdice', 'rd'],
-                              brief=_config['roll_brief'],
-                              description=_config['roll_description'])
-    async def roll(self, ctx: discord_commands.Context,
-                   expression: str = discord_commands.parameter(description=_config['roll_expression']),
-                   *,
-                   label: str = discord_commands.parameter(default=None, description=_config['roll_label'])):
+    @discord_commands.command(name='rolldice',
+                              aliases=['roll', 'r', 'rolld', 'rdice', 'rd'],
+                              brief=_config['roll_dice_brief'],
+                              description=_config['roll_dice_description'])
+    async def roll_dice(self, ctx: discord_commands.Context,
+                        expression: str = discord_commands.parameter(description=_config['roll_dice_expression']),
+                        *,
+                        label: str = discord_commands.parameter(default=None, description=_config['roll_dice_label'])):
         # Create roller for expression
         roller = ArithmeticDiceRoller(expression, label)
         try:
             roller.roll()
             # Compose embed with roll information
             embed_msg = DiscordEmbed(title=roller.label if roller.label else "No label roll", color=self.__embeds_color)
-            embed_msg.add_field(name="Requested by", value=ctx.message.author.mention)
+            embed_msg.add_field(name="Requested by", value=ctx.author.mention)
             embed_msg.add_field(name="Original expression", value=f"```{roller.expression}```", inline=False)
             # And create text file with full roll breakdown
             file_roll_info = StringIO()

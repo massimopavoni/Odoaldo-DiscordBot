@@ -2,6 +2,9 @@ FROM python:3.10-slim-buster
 
 WORKDIR Odoaldo-DiscordBot
 
+RUN apt-get -y update
+RUN apt-get install -y ffmpeg
+
 RUN python -m venv venv
 
 COPY requirements.txt requirements.txt

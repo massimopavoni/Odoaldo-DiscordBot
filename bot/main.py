@@ -16,11 +16,12 @@ logging_basicConfig(format='[%(asctime)s] [%(name)-24s] [%(levelname)-8s] - %(me
 logger = getLogger()
 
 # Get bot level config and create discord bot object with intents, token and main bot embeds color
-with open(path_join('bot', 'bot_config.json'), 'r', encoding='utf-8') as f:
+with open(path_join('bot', os_getenv('BOT_CONFIG')), 'r', encoding='utf-8') as f:
     _bot_config = json_load(f)
 __intents = discord.Intents.default()
 __intents.message_content = True
-bot = discord_commands.Bot(command_prefix='.',
+__intents.voice_states = True
+bot = discord_commands.Bot(command_prefix=_bot_config['command_prefix'],
                            case_insensitive=True,
                            description=_bot_config['bot_description'],
                            intents=__intents)
@@ -32,14 +33,15 @@ __embeds_color = int(_bot_config['embeds_color'], 16)
 async def on_ready():
     # Show Odoaldo activity, suggesting help command
     await bot.change_presence(status=discord.Status.online,
-                              activity=discord.Activity(type=discord.ActivityType.listening, name='.help'))
-    logger.info("Odoaldo is online")
+                              activity=discord.Activity(type=discord.ActivityType.listening,
+                                                        name=f'{bot.command_prefix}help'))
+    logger.info(f"Odoaldo is online: command prefix is {bot.command_prefix}")
 
 
 @bot.event
 async def on_command(ctx: discord_commands.Context):
     logger.info(f"Command {bot.command_prefix}{ctx.command} "
-                f"invoked by @{ctx.message.author.name} in #{ctx.channel.name}")
+                f"invoked by @{ctx.author.name} in #{ctx.channel.name}")
 
 
 @bot.event
@@ -84,7 +86,8 @@ async def on_command_error(ctx: discord_commands.Context, error: discord_command
     await ctx.send(embed=embed_msg)
 
 
-@bot.command(aliases=['close', 'stop', 'die'],
+@bot.command(name='shutdown',
+             aliases=['close', 'die'],
              brief=_bot_config['shutdown_brief'],
              description=_bot_config['shutdown_description'])
 @discord_commands.has_permissions(administrator=True)
@@ -99,7 +102,8 @@ async def shutdown(ctx: discord_commands.Context):
     await bot.close()
 
 
-@bot.command(aliases=['getextensions', 'getexts', 'gexts', 'extensions', 'exts'],
+@bot.command(name='getextensions',
+             aliases=['getexts', 'gexts', 'extensions', 'exts'],
              brief=_bot_config['get_extensions_brief'],
              description=_bot_config['get_extensions_description'])
 @discord_commands.has_permissions(administrator=True)
@@ -114,7 +118,8 @@ async def get_extensions(ctx: discord_commands.Context):
     await ctx.send(embed=embed_msg)
 
 
-@bot.command(aliases=['loadextensions', 'loadexts', 'lexts'],
+@bot.command(name='loadextensions',
+             aliases=['loadexts', 'lexts'],
              brief=_bot_config['load_extensions_brief'],
              description=_bot_config['load_extensions_description'])
 @discord_commands.has_permissions(administrator=True)
@@ -147,7 +152,8 @@ async def load_extensions(ctx: discord_commands.Context,
     await ctx.send(embed=embed_msg)
 
 
-@bot.command(aliases=['unloadextensions', 'unloadexts', 'ulexts'],
+@bot.command(name='unloadextensions',
+             aliases=['unloadexts', 'ulexts'],
              brief=_bot_config['unload_extensions_brief'],
              description=_bot_config['unload_extensions_description'])
 @discord_commands.has_permissions(administrator=True)
@@ -180,7 +186,8 @@ async def unload_extensions(ctx: discord_commands.Context,
     await ctx.send(embed=embed_msg)
 
 
-@bot.command(aliases=['reloadextensions', 'reloadexts', 'rlexts'],
+@bot.command(name='reloadextensions',
+             aliases=['reloadexts', 'rlexts'],
              brief=_bot_config['reload_extensions_brief'],
              description=_bot_config['reload_extensions_description'])
 @discord_commands.has_permissions(administrator=True)

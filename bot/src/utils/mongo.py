@@ -22,7 +22,7 @@ class MongoUtil(object):
         if cls.__instance is None:
             logger.info("Creating mongo client singleton instance")
             cls.__instance = super(MongoUtil, cls).__new__(cls)
-            cls.__mongo_client = MongoClient(mongo_uri)
+            cls.__mongo_client = MongoClient(mongo_uri, timeoutMS=8000)
             # Already prepare default database
             cls.__db = cls.__mongo_client['odoaldo']
         return cls.__instance

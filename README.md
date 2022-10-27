@@ -11,8 +11,10 @@
 > **21 Aprile 2018 - _Giacomo_**
 
 ### **Dependencies**
-- [discord.py](https://pypi.org/project/discord.py/) ([LICENSE](https://github.com/Rapptz/discord.py/blob/master/LICENSE))
+- [discord.py[voice]](https://pypi.org/project/discord.py/) ([LICENSE](https://github.com/Rapptz/discord.py/blob/master/LICENSE))
+    - [PyNaCl](https://pypi.org/project/PyNaCl/) ([LICENSE](https://github.com/pyca/pynacl/blob/main/LICENSE))
 - [pymongo](https://pypi.org/project/pymongo/) ([LICENSE](https://github.com/mongodb/mongo-python-driver/blob/master/LICENSE))
+- [yt-dlp](https://pypi.org/project/yt-dlp/) ([LICENSE](https://github.com/yt-dlp/yt-dlp/blob/master/LICENSE))
 - [arithmetic-dice-roller](https://pypi.org/project/arithmetic-dice-roller/) ([LICENSE](https://github.com/massimopavoni/arithmetic-dice-roller/blob/main/LICENSE))
 
 ## **Disclaimer**
@@ -47,11 +49,12 @@ cd Odoaldo-DiscordBot
 
 vim scripts/docker-build-env.sh
 ```
-Here's the environment configuration, as per how it's used by the `Dockerfile`.<br>
+Here's the build environment configuration, as per how it's used by the `Dockerfile`.<br>
 Note that the mongo host should be set to `odoaldo-mongo` only if you're using the proposed setup with `docker compose`, since that's gonna use the specified network and container names.
 ```bash
 #!/bin/bash
 
+export BOT_CONFIG=bot_config.json
 export DOCKERHUB_USER=
 export DOCKERHUB_REPOSITORY=
 export DISCORD_TOKEN=
@@ -88,7 +91,7 @@ Once again, edit the `docker-deploy-env.sh` script with the necessary variables:
 ```
 vim .odoaldo/docker-deploy-env.sh
 ```
-Here's the environment configuration:
+Here's the deploy environment configuration:
 ```bash
 #!/bin/bash
 

@@ -63,7 +63,7 @@ export MONGO_PASSWORD=
 export MONGO_HOST=odoaldo-mongo
 export MONGO_PORT=
 ```
-Remember to create the DockerHub reporitory you specified and login if it's a private one, then simply run the build and push script:
+Remember to create the DockerHub repository you specified and login if it's a private one, then simply run the build and push script:
 ```
 . scripts/docker-clean+build+push.sh
 ```

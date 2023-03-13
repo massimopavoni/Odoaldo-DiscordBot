@@ -1,3 +1,21 @@
+"""
+Odoaldo-DiscordBot
+Copyright (C) 2021  Massimo Pavoni
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+
 from asyncio import run as asyncio_run
 from json import load as json_load
 from logging import basicConfig as logging_basicConfig, getLogger, INFO
@@ -224,7 +242,8 @@ async def main():
     # Log basic bot information
     logger.info(f"{'-' * 80}")
     logger.info(f"{_bot_config['name']} - Version {_bot_config['version']} - {_bot_config['url']}")
-    logger.info(f"Licensed under {_bot_config['license']} by {_bot_config['author']} <{_bot_config['author_email']}>")
+    logger.info(
+        f"Licensed under {_bot_config['license']} - Copyright (C) {_bot_config['year']} {_bot_config['author']}")
     logger.info(f"{'-' * 80}")
     logger.info("Attempting to connect to mongo instance")
     # Create mongo util singleton instance

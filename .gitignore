@@ -231,3 +231,6 @@ dmypy.json
 
 # Project excluded directories/files
 local_*
+
+# Sonarqube scaner directory
+.scannerwork

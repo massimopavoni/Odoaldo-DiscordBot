@@ -112,7 +112,7 @@ class YTDLSource(PCMVolumeTransformer):
         processed_info = await loop.run_in_executor(None, functools_partial(cls.__ytdl.extract_info, webpage_url,
                                                                             download=False))
         if processed_info is None:
-            raise YTDLError(f"Could not fetch \"{webpage_url}\"")
+            raise YTDLError(f"Could not fetch `{webpage_url}`")
         if 'entries' not in processed_info:
             info = processed_info
         else:
@@ -526,7 +526,7 @@ class Music(discord_commands.Cog):
             try:
                 source = await YTDLSource.create(ctx, search, loop=self.bot.loop)
             except YTDLError as e:
-                raise e
+                raise YTDLError(f"Inner error while enqueuing music: {str(e)}")
             else:
                 logger.info(f"Music player enqueuing track requested by @{source.requester.name}")
                 track = MusicInfo(source)

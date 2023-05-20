@@ -16,11 +16,5 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-export BOT_CONFIG=bot_config.json
 export DOCKERHUB_USER=
 export DOCKERHUB_REPOSITORY=
-export DISCORD_TOKEN=
-export MONGO_USER=
-export MONGO_PASSWORD=
-export MONGO_HOST=odoaldo-mongo
-export MONGO_PORT=

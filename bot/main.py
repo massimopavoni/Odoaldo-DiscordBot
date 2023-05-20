@@ -254,7 +254,7 @@ async def main():
     # Test reachability
     ping = mongo_util.ping()
     if ping:
-        logger.critical(f"Odoaldo won't raise from the sandwiches' crumbles")
+        logger.critical("Odoaldo won't raise from the sandwiches' crumbles")
         logger.critical(f"Failed to locate and connect to mongo instance: [{type(ping).__name__}: {ping}]")
     else:
         logger.info("Mongo instance is reachable")

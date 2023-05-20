@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-arithmetic-dice-roller = "*"
+arithmetic-dice-roller = ">=0.3.1"
 pymongo = "*"
 "discord.py" = {extras = ["voice"], version = "*"}
 yt-dlp = "*"
@@ -12,4 +12,4 @@ yt-dlp = "*"
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"

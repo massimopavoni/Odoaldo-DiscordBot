@@ -36,7 +36,7 @@ This guide assumes you know how to create a Discord application on the [Develope
 I'm also assuming you would wanna deploy Odoaldo on a machine other than your own, and for this reason we use [DockerHub](https://hub.docker.com/) as a means to deliver the custom python image.<br>
 Furthermore, we push the image always with the same tag, as to allow the use of a private repository with other projects' tags.
 
-Everything following works on Linux based distros (but you can imagine from the steps and the contents of the scripts how you would setup a different host machine), and **only** for `Odoaldo-DiscordBot >= 2.0.0`
+Everything following works on Linux based distros (but you can imagine from the steps and the contents of the scripts how you would setup a different host machine), and **only** for `Odoaldo-DiscordBot >= 2.2.0`
 
 ### **Step 1:** Building Odoaldo custom docker image
 Download the source code archive from the [releases](https://github.com/massimopavoni/Odoaldo-DiscordBot/releases) or clone the repository with:
@@ -49,19 +49,12 @@ cd Odoaldo-DiscordBot
 
 vim scripts/docker-build-env.sh
 ```
-Here's the build environment configuration, as per how it's used by the `Dockerfile`.<br>
-Note that the mongo host should be set to `odoaldo-mongo` only if you're using the proposed setup with `docker compose`, since that's gonna use the specified network and container names.
+Here's the build environment configuration, as per how it's used by the `Dockerfile`.
 ```bash
 #!/bin/bash
 
-export BOT_CONFIG=bot_config.json
 export DOCKERHUB_USER=
 export DOCKERHUB_REPOSITORY=
-export DISCORD_TOKEN=
-export MONGO_USER=
-export MONGO_PASSWORD=
-export MONGO_HOST=odoaldo-mongo
-export MONGO_PORT=
 ```
 Remember to create the DockerHub repository you specified and login if it's a private one, then simply run the build and push script:
 ```
@@ -77,7 +70,7 @@ First, create the structure for the `odoaldo` command:
 ```
 mkdir -p ~/.local/bin/.odoaldo && cd $_
 ```
-Then, copy the necessary docker files inside `.odoaldo` and the `odoaldo` command script in `bin`:
+Then, copy the necessary docker files inside `bin/.odoaldo`, and the `odoaldo` command script in `bin`:
 ```
 curl -OOO https://raw.githubusercontent.com/massimopavoni/Odoaldo-DiscordBot/master/scripts/{docker-clean+pull.sh,docker-deploy-env.sh,odoaldo_docker-compose.yml}
 
@@ -97,10 +90,14 @@ Here's the deploy environment configuration:
 
 export DOCKERHUB_USER=
 export DOCKERHUB_REPOSITORY=
+export BOT_CONFIG=bot_config.json
+export DISCORD_TOKEN=
+export MONGO_HOST=odoaldo-mongo
 export MONGO_USER=
 export MONGO_PASSWORD=
 export MONGO_PORT=
 ```
+Note that the mongo host should be set to `odoaldo-mongo` only if you're using the proposed setup with `docker compose`, since that's gonna use the specified network and container names. It should be noted that the environment file is not safe on its own, and you might want to think of another layer of security.<br>
 Remember to login to DockerHub if the repository is private, then simply go back to the home and run `odoaldo`:
 ```
 cd ~

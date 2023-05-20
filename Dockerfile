@@ -14,31 +14,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM python:3.10-slim-buster
+FROM alpine
 
 WORKDIR Odoaldo-DiscordBot
 
-RUN apt-get -y update
-RUN apt-get install -y ffmpeg
-
-RUN python -m venv venv
-
-COPY requirements.txt requirements.txt
 COPY bot/ bot/
+COPY requirements.txt .
 
-RUN . venv/bin/activate && pip install -r requirements.txt
+RUN apk add ffmpeg python3 py3-pip && \
+    pip install --no-cache-dir -r requirements.txt && \
+    apk del py3-pip && \
+    apk cache clean && \
+    addgroup -S nonroot && \
+    adduser -S odoaldo -G nonroot
 
-ARG BOT_CONFIG \
-    DISCORD_TOKEN \
-    MONGO_USER \
-    MONGO_PASSWORD \
-    MONGO_HOST \
-    MONGO_PORT
-ENV BOT_CONFIG=$BOT_CONFIG \
-    DISCORD_TOKEN=$DISCORD_TOKEN \
-    MONGO_USER=$MONGO_USER \
-    MONGO_PASSWORD=$MONGO_PASSWORD \
-    MONGO_HOST=$MONGO_HOST \
-    MONGO_PORT=$MONGO_PORT
+USER odoaldo
 
-CMD . venv/bin/activate && exec python bot/main.py
+CMD python bot/main.py

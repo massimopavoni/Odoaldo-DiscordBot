@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   odoaldo-mongo:
     container_name: odoaldo-mongo
